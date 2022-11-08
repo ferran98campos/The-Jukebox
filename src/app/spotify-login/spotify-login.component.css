@@ -1,0 +1,28 @@
+#login-flex{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+#login-flex > div:nth-of-type(1) {flex-grow: 4;}
+#login-flex > div:nth-of-type(2) {flex-grow: 3;}
+
+h2 > i{
+    color: #7743DB;
+}
+
+button{
+    width: 100%;
+    padding: 20px 10px 20px 10px;
+    background: #1DB954 url(../../img/Spotify_Logo_RGB_White.png) no-repeat;
+    background-position: 50%;
+    background-size: contain;
+    border-radius: 10px;
+    border : solid 10px #1DB954;
+}
+
+button:hover,
+button:focus {
+  box-shadow: 0 0.5em 0.5em -0.4em var(--hover);
+  transform: translateY(-0.25em);
+}

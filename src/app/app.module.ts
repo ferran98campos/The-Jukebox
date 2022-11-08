@@ -3,10 +3,12 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { SpotifyLoginComponent } from './spotify-login/spotify-login.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    SpotifyLoginComponent
   ],
   imports: [
     BrowserModule,
