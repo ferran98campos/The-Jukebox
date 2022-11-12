@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TimeMachineComponent } from './time-machine.component';
+import { WrapComponent } from './wrap.component';
 
-describe('TimeMachineComponent', () => {
-  let component: TimeMachineComponent;
-  let fixture: ComponentFixture<TimeMachineComponent>;
+describe('WrapComponent', () => {
+  let component: WrapComponent;
+  let fixture: ComponentFixture<WrapComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ TimeMachineComponent ]
+      declarations: [ WrapComponent ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(TimeMachineComponent);
+    fixture = TestBed.createComponent(WrapComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

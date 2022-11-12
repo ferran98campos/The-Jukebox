@@ -7,14 +7,14 @@ import { SpotifyLoginComponent } from './spotify-login/spotify-login.component';
 import { CallbackComponent } from './callback/callback.component';
 import { HttpClientModule } from '@angular/common/http';
 import { LocalStorageModule } from 'angular-2-local-storage';
-import { TimeMachineComponent } from './time-machine/time-machine.component';
+import { WrapComponent } from './wrap/wrap.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     SpotifyLoginComponent,
     CallbackComponent,
-    TimeMachineComponent
+    WrapComponent,
   ],
   imports: [
     BrowserModule,

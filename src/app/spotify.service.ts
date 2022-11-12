@@ -73,7 +73,7 @@ export class SpotifyService {
             //Store code and state
             this.storage.set('code', params['code']);
             this.storage.set('state', params['state']); 
-            this.router.navigate(['/time-machine']);  
+            this.router.navigate(['/wrap-up']);  
           }
         },
         error => {
