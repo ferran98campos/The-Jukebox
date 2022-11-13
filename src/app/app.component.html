@@ -1,9 +1,18 @@
-<header>
-  <h1>The Jukebox</h1>
-</header>
+<div class="jukebox-body">
+  <div class="neon-side"></div>
 
-<section id="jukebox-body">
-  <router-outlet></router-outlet>
-</section>
+  <div>
+    <header>
+      <h1>T<span>he</span> Juke<span>B</span>ox</h1>
+      <hr>
+      <hr>
+    </header>
+  
+    <section id="body-content">
+      <router-outlet></router-outlet>
+    </section>
 
-<footer>Thanks for visiting us!</footer>
+  </div>
+
+  <div class="neon-side"></div>
+</div>

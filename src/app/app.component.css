@@ -1,18 +1,125 @@
-header, footer{
-    color: #FFE9B1;
-    text-align: center;
+@import url(//fonts.googleapis.com/css?family=Vibur);
+
+/* Jukebox body*/
+.jukebox-body{
+    display: flex;
+    flex-direction: row;
+    height: 100%;
 }
+
+/* Neon lights att the sides*/
+.jukebox-body div:nth-child(odd){
+    height: 100%;
+    width: 1%;
+    margin: 0px 1% 0px 1%;
+    background-color:rgb(255, 238, 254);
+    box-shadow:
+    0 0 2px, 
+    0 0 15em #b500b5, 
+    0 0 10em #b500b5, 
+    0 0 5em #b500b5, 
+    0 10px 3px #000;
+}
+
+/* Dimensions for web body*/
+.jukebox-body div:nth-child(2){
+    height: 100%;
+    width: 90%;
+    margin: 0px 2% 0px 2%;
+}
+
+/*Header*/
 
 header{
+    font-family: "Vibur";
+    text-align: center;
     font-size: 3rem;
+    margin: 10%;
 }
 
-footer{
-    font-size: 1.5rem;
+/*Title neon effect*/
+h1{
+    width: 50%;
+    padding: 0% 25% 0% 25%  ;
+    color:rgb(238, 255, 254);
+    text-shadow:
+    0 -40px 100px, 
+    0 0 2px, 
+    0 0 1em #00ADB5, 
+    0 0 0.5em #00ADB5, 
+    0 0 0.1em #00ADB5, 
+    0 10px 3px #000;
+    margin: 0px;
 }
 
-#jukebox-body{
-    background-color: #FCFDF2;
+/* Blinking Effect on title*/
+h1 span{
+    animation: blink linear infinite 2s;
+}
+
+h1 span:nth-of-type(2){
+    animation: blink linear infinite 3s;
+}
+
+@keyframes blink {
+    78% {
+      color: inherit;
+      text-shadow: inherit;
+    }
+    79%{
+       color: #333;
+    }
+    80% {
+      
+      text-shadow: none;
+    }
+    81% {
+      color: inherit;
+      text-shadow: inherit;
+    }
+    82% {
+      color: #333;
+      text-shadow: none;
+    }
+    83% {
+      color: inherit;
+      text-shadow: inherit;
+    }
+    92% {
+      color: #333;
+      text-shadow: none;
+    }
+    92.5% {
+      color: inherit;
+      text-shadow: inherit;
+    }
+}
+
+/* Neon bar under the title*/
+header > hr{
+    margin-top: 0px;
+    height: 4px;
+    border-radius: 10px;
+    background-color:rgb(255, 225, 253);
+    box-shadow:
+    0 -40px 100px, 
+    0 0 2px, 
+    0 0 15em #b500b5, 
+    0 0 10em #b500b5, 
+    0 0 5em #b500b5, 
+    0 10px 3px #000;
+}
+
+header hr:first-of-type{
+    width: 40%;
+}
+
+header hr:last-child{
+    width: 35%;
+}
+
+#body-content{
+    background-color: #EEEEEE;
     border-radius: 10px;
     padding: 5% 10% 5% 10%;
     margin: 50px 0px 50px 0px;
