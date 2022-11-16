@@ -1,17 +1,28 @@
 @import url(//fonts.googleapis.com/css?family=Vibur);
 
-/* Jukebox body*/
-.jukebox-body{
+/* Jukebox layout*/
+  /*Display flex, in order to put vertical neon lights at sides. Body will be the element in the middle*/
+  div.jukebox-layout{
     display: flex;
     flex-direction: row;
-    height: 100%;
-}
+    min-height: 100%;
+    height: fit-content;
+  }
 
-/* Neon lights att the sides*/
-.jukebox-body div:nth-child(odd){
-    height: 100%;
+/* Neon lights at left and right side*/
+ 
+  /*General rule*/
+  div#neon-side-left, div#neon-side-right{
+    display: block;
+    overflow: auto;
     width: 1%;
     margin: 0px 1% 0px 1%;
+    border-radius: 5px;
+  }
+
+  /*When neon light is on*/
+  div#neon-side-left.light-on, div#neon-side-right.light-on{
+    transition: all ease-in 1s;
     background-color:rgb(255, 238, 254);
     box-shadow:
     0 0 2px, 
@@ -19,26 +30,88 @@
     0 0 10em #b500b5, 
     0 0 5em #b500b5, 
     0 10px 3px #000;
-}
+  }
 
-/* Dimensions for web body*/
-.jukebox-body div:nth-child(2){
-    height: 100%;
-    width: 90%;
-    margin: 0px 2% 0px 2%;
-}
+/* Jukebox Body*/
+  /*Dimensions for the jukebox body, which is the central element of the flex, and where all the angular objects will appear*/
+  div#jukebox-body{
+      height: 100%;
+      width: 90%;
+      margin: 0px 2% 0px 2%;
+  }
 
 /*Header*/
+  /*Go back home button / Turn On,Off button*/
+  #home-button{
+    float:right;
+    background-color: antiquewhite;
+    padding: 1%;
+  }
 
-header{
-    font-family: "Vibur";
-    text-align: center;
-    font-size: 3rem;
-    margin: 10%;
-}
+  /*Header's general rules*/
+  header{
+      font-family: "Vibur";
+      text-align: center;
+      font-size: 3rem;
+      margin: 10%;
+  }
 
-/*Title neon effect*/
-h1{
+  /*Title general rule*/
+  h1{
+    width: 50%;
+    padding: 0% 25% 0% 25%;
+    margin: 0px;
+  }
+
+  /*When neon light is on*/
+  h1.light-on{
+    transition: all ease-in 1s;
+    color:rgb(238, 255, 254);
+    text-shadow:
+    0 -40px 100px, 
+    0 0 2px, 
+    0 0 1em #00ADB5, 
+    0 0 0.5em #00ADB5, 
+    0 0 0.1em #00ADB5, 
+    0 10px 3px #000;
+  }
+
+  /* Blinking Effect on title*/
+  h1.light-on span {
+      animation: 5s infinite linear blink;
+  }
+
+  h1.light-on span:nth-of-type(2){
+      animation: 8s infinite linear blink;
+  }
+
+  /* Neon bar under the title - HR dimensions*/
+  header > hr{
+      margin-top: 0px;
+      height: 4px;
+      border-radius: 10px;
+  }
+
+  header hr:first-of-type{
+      width: 40%;
+  }
+
+  header hr:last-child{
+      width: 35%;
+  }
+
+
+/*Footer*/
+  /*General rule*/
+  footer{
+      font-family: "Vibur";
+      text-align: center;
+      font-size: 2rem;
+      padding: 5%;
+  }
+
+  /*When neon light is on*/
+  p#neon-footer.light-on{
     width: 50%;
     padding: 0% 25% 0% 25%  ;
     color:rgb(238, 255, 254);
@@ -50,38 +123,64 @@ h1{
     0 0 0.1em #00ADB5, 
     0 10px 3px #000;
     margin: 0px;
+  }
+
+  /* Blinking Effect on title*/
+  p#neon-footer.light-on span{
+    animation: blink linear infinite 5s;
+  }
+
+  /*neon bar over the footer - HR dimensions*/
+  footer > hr{
+    width:30%;
+    margin-top: 0px;
+    margin-bottom: 2%;
+    height: 5px;
+    border-radius: 10px;
+  }
+
+/*HR*/
+  /*When lights are on*/
+  hr.light-on{
+    transition: all ease-in 1s;
+    background-color:rgb(255, 225, 253);
+    box-shadow:
+    0 -40px 100px, 
+    0 0 2px, 
+    0 0 15em #b500b5, 
+    0 0 10em #b500b5, 
+    0 0 5em #b500b5, 
+    0 10px 3px #000;
+  }
+
+/*When the lights are OFF*/
+.light-off{
+  color:#333;
 }
 
-/* Blinking Effect on title*/
-h1 span{
-    animation: blink linear infinite 2s;
-}
-
-h1 span:nth-of-type(2){
-    animation: blink linear infinite 3s;
-}
-
-@keyframes blink {
-    78% {
+/* Animations */
+  /*Neon blink animation*/
+  @keyframes blink {
+    85% {
       color: inherit;
       text-shadow: inherit;
     }
-    79%{
-       color: #333;
+    86%{
+      color: #333;
     }
-    80% {
+    87% {
       
       text-shadow: none;
     }
-    81% {
+    88% {
       color: inherit;
       text-shadow: inherit;
     }
-    82% {
+    89% {
       color: #333;
       text-shadow: none;
     }
-    83% {
+    90% {
       color: inherit;
       text-shadow: inherit;
     }
@@ -93,35 +192,14 @@ h1 span:nth-of-type(2){
       color: inherit;
       text-shadow: inherit;
     }
-}
+  }
 
-/* Neon bar under the title*/
-header > hr{
-    margin-top: 0px;
-    height: 4px;
-    border-radius: 10px;
-    background-color:rgb(255, 225, 253);
-    box-shadow:
-    0 -40px 100px, 
-    0 0 2px, 
-    0 0 15em #b500b5, 
-    0 0 10em #b500b5, 
-    0 0 5em #b500b5, 
-    0 10px 3px #000;
-}
-
-header hr:first-of-type{
-    width: 40%;
-}
-
-header hr:last-child{
-    width: 35%;
-}
+/*OTHERS*/
 
 #body-content{
-    background-color: #EEEEEE;
-    border-radius: 10px;
-    padding: 5% 10% 5% 10%;
-    margin: 50px 0px 50px 0px;
-    font-size: 1rem;
+  background-color: #EEEEEE;
+  border-radius: 10px;
+  padding: 5% 10% 5% 10%;
+  margin: 50px 0px 50px 0px;
+  font-size: 1rem;
 }

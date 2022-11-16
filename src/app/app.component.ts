@@ -7,4 +7,47 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'The-Jukebox';
+
+  private lights:Boolean;
+
+  constructor(){
+    this.lights = false;
+  }
+
+  //Adds an event listener to the Spotify Button
+  ngOnInit(): void {
+    const button = document.getElementById('home-button');
+    button?.addEventListener('click', this.turnLights.bind(this));
+  }
+
+  turnLights(): void{
+    //Define variables
+    var array;
+    var addingClass;
+    var deletingClass;
+
+    
+    if(this.lights){
+      //If lights are on, then change their class to light-off
+      array = document.getElementsByClassName("light-on");
+      addingClass = "light-off";
+      deletingClass = "light-on";
+    }else{
+      //If lights are off, then change their class to light-on
+      array = document.getElementsByClassName("light-off");
+      addingClass = "light-on";
+      deletingClass = "light-off";
+    }
+
+    //Delete the last class, and add the new one
+    while(array.length > 0){
+      array[0].classList.add(addingClass);
+      array[0].classList.remove(deletingClass);
+    }
+
+    //Change the boolean value of this.lights to the new one
+    this.lights = !this.lights;
+  }
+  
+
 }
