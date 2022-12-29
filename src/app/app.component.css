@@ -10,7 +10,6 @@
   }
 
 /* Neon lights at left and right side*/
- 
   /*General rule*/
   div#neon-side-left, div#neon-side-right{
     display: block;
@@ -40,13 +39,186 @@
       margin: 0px 2% 0px 2%;
   }
 
+  /*Select Menu*/
+  form#select-menu{
+    display: grid;
+    grid-template-columns: auto auto;
+    gap: 10%;
+  }
+
+  /* Selectable Item*/
+  form#select-menu div{
+    width: 100%;
+    font-size: 2em;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+
+  form#select-menu div.light-off{
+    background: linear-gradient(180deg, 
+    #ff00ff00 calc(50% - 3px), 
+    #000000 calc(50% - 2px),
+    #000000 calc(50% - 2px),
+    rgba(0,0,0,0) calc(50% + 3px)
+    );
+  }
+
+  form#select-menu div.light-on{
+    background: linear-gradient(180deg, 
+    #ff00ff00 calc(50% - 3px), 
+    #81bcff calc(50% - 2px),
+    #81bcff calc(50% - 2px),
+    rgba(0,0,0,0) calc(50% + 3px)
+    );
+    transition: all 500ms;
+  }
+
+  form#select-menu div.light-on#selected-label{
+    background: linear-gradient(180deg, 
+    #ff00ff00 calc(50% - 3px), 
+    #ff81f5 calc(50% - 2px),
+    #ff81f5 calc(50% - 2px),
+    rgba(0,0,0,0) calc(50% + 3px)
+    );
+    transition: all 500ms;
+  }
+
+  /*Label / Text part of the selectable*/
+  form#select-menu div label{
+    text-align: center;
+    flex:1;
+    margin: 4% 4% 4% 0%;
+  }
+
+  /*Changes order of the button/label depending on which part of the grid its located*/
+  form#select-menu div:nth-child(even) label{
+    order: 2;
+    margin: 4% 0% 4% 4%;
+  }
+
+  form#select-menu div:nth-child(even) input{
+    order: 1;
+  }
+
+  /*Radio Button Style*/
+  form#select-menu div input {
+    transform: translateY(-8px);
+    appearance: none;
+    border: 0.2em solid black;
+    border-radius: 50%;
+    width: 4vh;
+    height: 4vh;
+    margin-bottom: 8px;
+  }
+
+  form#select-menu div.light-off input {
+    background-color: #080808;
+    box-shadow: 0 1px #000000,
+							0 2px #000000,
+							0 3px #000000,
+							0 4px #000000,
+							0 5px #000000,
+							0 6px #000000,
+							0 7px #000000,
+							0 8px #000000,
+              0px 8px 0 5px #000000;     
+  }
+
+  form#select-menu div.light-on input {
+    background-color: #1d1d1d;
+    box-shadow: 0 1px #050505,
+							0 2px #050505,
+							0 3px #050505,
+							0 4px #050505,
+							0 5px #050505,
+							0 6px #050505,
+							0 7px #050505,
+							0 8px #050505,
+              0px 8px 0 5px #81bcff;     
+    transition: all 150ms;
+  }
+
+  form#select-menu div.light-on input:hover {
+    background-color: rgb(44, 63, 68);
+    transition: all 10ms;
+  }
+
+  form#select-menu div.light-off input:checked {
+		transform: translateY(-4px);
+    background-color: #080808;
+    box-shadow: 0 1px #000000,
+              0 2px #000000,
+              0 3px #000000,
+              0 4px #000000,
+              0px 8px 0 5px #000000;    
+  }
+
+  form#select-menu div.light-on input:checked {
+		transform: translateY(-4px);
+    background-color: #201422;
+    box-shadow: 0 1px #050505,
+              0 2px #050505,
+              0 3px #050505,
+              0 4px #050505, 
+              0px 4px 0 5px #ff81f5;
+    transition: all 150ms;
+  }
+
+  /*Text Label Style*/
+  form#select-menu div label {
+    padding: 2% 0% 2% 0%;
+    border-radius: 5px;
+    border-radius: 30px;
+  }
+
+  form#select-menu div.light-off label {
+    background-color: #1e2222;
+  }
+
+  form#select-menu div.light-on label{
+    background-color: #e4fbff;
+    transition: all 150ms;
+  }
+
+  form#select-menu div.light-on#selected-label label{
+    background-color: #ffe4fe;
+    transition: all 150ms;
+  }
+
 /*Header*/
   /*Go back home button / Turn On,Off button*/
   #home-button{
+    background-color: #373e49;
+    -webkit-appearance: none;
+    box-shadow: -10px -10px 15px #333, 10px 10px 15px rgba(255, 255, 255, 0.12),inset -10px -10px 15px #333,inset 10px 10px 15px rgba(255, 255, 255, 0.12);
+    border-radius: 50%;
+    border: 8px solid #ececec;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     float:right;
-    background-color: antiquewhite;
     padding: 1%;
+    margin: 3% 7% 0px 0px;
+    animation: 4s infinite linear button-off-animation;
   }
+
+  #home-button::after{
+    font-family: FontAwesome;
+    content: "\f011";
+    color: #7a7a7a;
+    font-size: 3em;
+}
+
+#home-button:checked{
+  box-shadow: -10px -10px 15px rgba(0, 255, 0, 0.12), 10px 10px 15px rgba(70, 70, 70, 0.12);
+    animation: none;
+    border: 8px solid #78fd5d;
+}
+
+#home-button:checked:after{
+    color: #dadada;
+}
 
   /*Header's general rules*/
   header{
@@ -194,12 +366,104 @@
     }
   }
 
+  /*Neon blink animation*/
+  @keyframes button-off-animation {
+    80% {
+      box-shadow: -10px -10px 15px rgba(255, 255, 255, 0.5), 10px 10px 15px rgba(70, 70, 70, 0.12);
+      border: 8px solid #ececec;
+    }
+    85%{
+      box-shadow: 0px 0px 0px #333, 0px 0px 0px #333;
+      border: 8px solid #333;
+    }
+    90% {
+      box-shadow: -10px -10px 15px rgba(255, 255, 255, 0.5), 10px 10px 15px rgba(70, 70, 70, 0.12);
+      border: 8px solid #ececec;
+    }
+    95%{
+      box-shadow: 0px 0px 0px #333, 0px 0px 0px #333;
+      border: 8px solid #333;
+    }
+  }
+
+
+/* LOGIN FORM */
+
+#overlay {
+  position: fixed;
+  display: none;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0,0,0,0.5);
+  z-index: 2;
+  cursor: pointer;
+}
+
+#login-flex{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    background-color: #ececec;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    font-size: 50px;
+    transform: translate(-50%,-50%);
+    -ms-transform: translate(-50%,-50%);
+    padding: 5%;
+    border-radius: 40%;
+}
+
+#login-flex > div:nth-of-type(1) {flex-grow: 4;}
+#login-flex > div:nth-of-type(2) {flex-grow: 4;}
+
+h2 > i{
+  color: #7743DB;
+}
+
+#login-flex > button{
+  width: 100%;
+  padding: 20px 10px 20px 10px;
+  background: #1DB954 url(../img/Spotify_Logo_RGB_White.png) no-repeat;
+  background-position: 50%;
+  background-size: contain;
+  border-radius: 10px;
+  border : solid 1px #1DB954;
+  box-shadow: 0 0 1px 1px #1DB954, 0 0 0 0 #1DB954;
+  transition: all 150ms ease-in-out;
+}
+
+#login-flex > button:hover,
+#login-flex > button:focus {
+box-shadow: 0 0 1px 0 #3B3486, 0 0 1px 4px #3B3486 ;
+}
+
+@media (max-width: 800px) {
+  #login-flex {
+    flex-direction: column;
+  }
+  #login-flex > div{
+      width: 100%;
+      margin-bottom: 10px;
+  }
+}
+
 /*OTHERS*/
 
 #body-content{
-  background-color: #EEEEEE;
-  border-radius: 10px;
-  padding: 5% 10% 5% 10%;
+  border-radius: 20px;
+  padding: 5% 5% 5% 5%;
   margin: 50px 0px 50px 0px;
   font-size: 1rem;
+  border-radius: 100px;
+  background-color: #343538;
+}
+
+#body-content.light-on{
+  box-shadow: 0px 0px 7px 7px rgb(46, 215, 221);
+  transition: all 500ms;
 }

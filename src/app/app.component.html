@@ -2,15 +2,32 @@
   <div id="neon-side-left" class="light-off"></div>
 
   <div id="jukebox-body">
-    <button id="home-button">Home</button>
+    <input type="checkbox" id="home-button" style="outline: none;"> 
     <header>
       <h1 id="neon-title" class="light-off">T<span>he</span> Juke<span>B</span>ox</h1>
       <hr class="light-off">
       <hr class="light-off">
     </header>
   
-    <section id="body-content">
-      <router-outlet></router-outlet>
+    <section id="body-content" class="light-off">
+      <form id="select-menu">
+        <div class="light-off">
+          <label for="Most Listened">Most Listened</label>
+          <input type="radio" id="most_listened" name="music_selection" value="most_listened">
+        </div>
+        <div class="light-off">
+          <label for="Playlist Mix">Playlist Mix</label>
+          <input type="radio" id="playlist_mix" name="music_selection" value="playlist_mix">
+        </div>
+        <div class="light-off">
+          <label for="One Artist">One Artist</label>
+          <input type="radio" id="artist" name="music_selection" value="artist">
+        </div>
+        <div class="light-off">
+          <label for="Surprise Me">Surprise Me</label>
+          <input type="radio" id="surprise" name="music_selection" value="surprise">
+        </div>
+      </form>
     </section>
 
   </div>

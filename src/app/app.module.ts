@@ -8,6 +8,7 @@ import { CallbackComponent } from './callback/callback.component';
 import { HttpClientModule } from '@angular/common/http';
 import { LocalStorageModule } from 'angular-2-local-storage';
 import { TimeMachineComponent } from './time-machine/time-machine.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @NgModule({
   declarations: [
@@ -20,10 +21,12 @@ import { TimeMachineComponent } from './time-machine/time-machine.component';
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
+    FontAwesomeModule,
     LocalStorageModule.forRoot({
       prefix: 'tutorial',
       storageType: 'localStorage'
-  })
+  }),
+    FontAwesomeModule
   ],
   providers: [],
   bootstrap: [AppComponent]

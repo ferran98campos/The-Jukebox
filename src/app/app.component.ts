@@ -18,7 +18,20 @@ export class AppComponent {
   ngOnInit(): void {
     const button = document.getElementById('home-button');
     button?.addEventListener('click', this.turnLights.bind(this));
+
+    const inputs = this.getAllInputElementsFromElement('select-menu');
+    if(inputs!=null){
+      for (var i = 0; i < inputs.length; i++) {
+        inputs[i]?.addEventListener('click', this.selectLabel.bind(this, inputs[i].value));
+      }
+    }
+
   }
+
+  getAllInputElementsFromElement(parentId: string){
+    return document.getElementById(parentId)?.getElementsByTagName('input');
+  }
+
 
   turnLights(): void{
     //Define variables
@@ -49,5 +62,16 @@ export class AppComponent {
     this.lights = !this.lights;
   }
   
-
+  selectLabel(value: string): void{
+    const inputs = this.getAllInputElementsFromElement('select-menu');
+    if(inputs!=null){
+      for (var i = 0; i < inputs.length; i++) {
+        if(inputs[i].value == value){
+          inputs[i].parentElement!.id = "selected-label";
+        }else{
+          inputs[i].parentElement!.id = "";
+        }
+      }
+    }
+  }
 }
