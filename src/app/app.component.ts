@@ -9,16 +9,20 @@ export class AppComponent {
   title = 'The-Jukebox';
 
   private lights:Boolean;
+  private scrollInterval:number;
 
   constructor(){
     this.lights = false;
+    this.scrollInterval = 0; 
   }
 
   //Adds an event listener to the Spotify Button
   ngOnInit(): void {
+    //Home Button
     const button = document.getElementById('home-button');
     button?.addEventListener('click', this.turnLights.bind(this));
 
+    //Color changing in label form
     const inputs = this.getAllInputElementsFromElement('select-menu');
     if(inputs!=null){
       for (var i = 0; i < inputs.length; i++) {
@@ -26,6 +30,14 @@ export class AppComponent {
       }
     }
 
+    //Scrolling throughplaylist
+    const leftArrow = document.getElementById('queue-left-arrow');
+    leftArrow?.addEventListener('mouseover', this.scrollPlaylist.bind(this, false));
+    leftArrow?.addEventListener('mouseout', this.stopScroll.bind(this));
+
+    const rightArrow = document.getElementById('queue-right-arrow');
+    rightArrow?.addEventListener('mouseover', this.scrollPlaylist.bind(this, true));
+    rightArrow?.addEventListener('mouseout', this.stopScroll.bind(this));
   }
 
   getAllInputElementsFromElement(parentId: string){
@@ -73,5 +85,23 @@ export class AppComponent {
         }
       }
     }
+  }
+
+  //Scroll playlist. Direction: true moves it to right, Direction: false moves it left
+  scrollPlaylist(direction: boolean): void{
+    
+      this.scrollInterval = window.setInterval(() => {
+        var playlist = document.getElementById('songs-queue');
+        var amount = ((direction) ? 150 : -150);
+        if(document.getElementById('songs-queue') != null && document.getElementById('songs-queue')?.scrollLeft != null){
+          document.getElementById('songs-queue')!.scrollLeft = document.getElementById('songs-queue')!.scrollLeft + amount;
+          console.log(document.getElementById('songs-queue')?.scrollLeft);
+      }}, 120);
+    }
+  
+
+  stopScroll(): void{
+    console.log('left');
+    window.clearInterval(this.scrollInterval);
   }
 }
