@@ -1,9 +1,73 @@
-<header>
-  <h1>The Jukebox</h1>
-</header>
+<div class="jukebox-layout">
+  <div id="neon-side-left" class="light-off"></div>
 
-<section id="jukebox-body">
-  <router-outlet></router-outlet>
-</section>
+  <div id="jukebox-body">
+    <input type="checkbox" id="home-button" style="outline: none;"> 
+    <header>
+      <h1 id="neon-title" class="light-off">T<span>he</span> Juke<span>B</span>ox</h1>
+      <hr class="light-off">
+      <hr class="light-off">
+    </header>
+  
+    <section id="body-content" class="light-off">
+      <form id="select-menu">
+        <div class="light-off">
+          <label for="Most Listened">Most Listened</label>
+          <input type="radio" id="most_listened" name="music_selection" value="most_listened">
+        </div>
+        <div class="light-off">
+          <label for="Playlist Mix">Playlist Mix</label>
+          <input type="radio" id="playlist_mix" name="music_selection" value="playlist_mix">
+        </div>
+        <div class="light-off">
+          <label for="One Artist">One Artist</label>
+          <input type="radio" id="artist" name="music_selection" value="artist">
+        </div>
+        <div class="light-off">
+          <label for="Surprise Me">Surprise Me</label>
+          <input type="radio" id="surprise" name="music_selection" value="surprise">
+        </div>
+      </form>
+    </section>
 
-<footer>Thanks for visiting us!</footer>
+    <section id="music-player">
+      <div id="playing-song-info">
+          <div>
+          </div>
+          <p><b>California Dreamin'</b></p>
+          <p>The Mamas & The Papas</p>
+          <p><i>If You Can Believe Your Eyes & Ears (1966)</i></p>
+      </div>
+
+      <div id="control-queue">
+        <div id="queue-left-arrow" class="queue-arrow"><span><</span></div>
+        <div id="songs-queue">
+          <span><img src="https://m.media-amazon.com/images/I/61YeJkzhAYL._SL1200_.jpg"></span>
+          <span><img src="https://m.media-amazon.com/images/I/61YeJkzhAYL._SL1200_.jpg"></span>
+          <span><img src="https://m.media-amazon.com/images/I/61YeJkzhAYL._SL1200_.jpg"></span>
+          <span><img src="https://m.media-amazon.com/images/I/61YeJkzhAYL._SL1200_.jpg"></span>
+          <span><img src="https://m.media-amazon.com/images/I/61YeJkzhAYL._SL1200_.jpg"></span>
+          <span><img src="https://m.media-amazon.com/images/I/61YeJkzhAYL._SL1200_.jpg"></span>
+          <span><img src="https://m.media-amazon.com/images/I/61YeJkzhAYL._SL1200_.jpg"></span>
+          <span><img src="https://m.media-amazon.com/images/I/61YeJkzhAYL._SL1200_.jpg"></span>
+          <span><img src="https://m.media-amazon.com/images/I/61YeJkzhAYL._SL1200_.jpg"></span>
+          <span><img src="https://m.media-amazon.com/images/I/61YeJkzhAYL._SL1200_.jpg"></span>
+          <span><img src="https://m.media-amazon.com/images/I/61YeJkzhAYL._SL1200_.jpg"></span>
+          <span><img src="https://m.media-amazon.com/images/I/61YeJkzhAYL._SL1200_.jpg"></span>
+          <span><img src="https://m.media-amazon.com/images/I/61YeJkzhAYL._SL1200_.jpg"></span>
+          <span><img src="https://m.media-amazon.com/images/I/61YeJkzhAYL._SL1200_.jpg"></span>
+          <span><img src="https://m.media-amazon.com/images/I/61YeJkzhAYL._SL1200_.jpg"></span>
+          <span><img src="https://m.media-amazon.com/images/I/61YeJkzhAYL._SL1200_.jpg"></span>
+        </div>
+        <div id="queue-right-arrow" class="queue-arrow"><span>></span></div>
+      </div>
+    </section>
+  </div>
+
+  <div id="neon-side-right" class="light-off"></div>
+</div>
+
+<footer>
+  <hr class="light-off">
+  <p id="neon-footer" class="light-off">Thanks for visiting us<span>!</span></p>
+</footer>

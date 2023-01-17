@@ -1,20 +1,657 @@
-header, footer{
-    color: #FFE9B1;
-    text-align: center;
+@import url(//fonts.googleapis.com/css?family=Vibur);
+
+/* Jukebox layout*/
+  /*Display flex, in order to put vertical neon lights at sides. Body will be the element in the middle*/
+  div.jukebox-layout{
+    display: flex;
+    flex-direction: row;
+    min-height: 100%;
+    height: fit-content;
+  }
+
+/* Neon lights at left and right side*/
+  /*General rule*/
+  div#neon-side-left, div#neon-side-right{
+    display: block;
+    overflow: auto;
+    width: 1%;
+    margin: 0px 1% 0px 1%;
+    border-radius: 5px;
+  }
+
+  /*When neon light is on*/
+  div#neon-side-left.light-on, div#neon-side-right.light-on{
+    transition: all ease-in 1s;
+    background-color:rgb(255, 238, 254);
+    box-shadow:
+    0 0 2px, 
+    0 0 15em #b500b5, 
+    0 0 10em #b500b5, 
+    0 0 5em #b500b5, 
+    0 10px 3px #000;
+  }
+
+/* Jukebox Body*/
+  /*Dimensions for the jukebox body, which is the central element of the flex, and where all the angular objects will appear*/
+  div#jukebox-body{
+      height: 100%;
+      width: 90%;
+      margin: 0px 2% 0px 2%;
+  }
+
+    /*Select Menu*/
+    form#select-menu{
+      display: grid;
+      grid-template-columns: auto auto;
+      gap: 10%;
+    }
+
+    /* Selectable Item*/
+    form#select-menu div{
+      width: 100%;
+      font-size: 2em;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+    }
+
+    form#select-menu div.light-off{
+      background: linear-gradient(180deg, 
+      #ff00ff00 calc(50% - 3px), 
+      #000000 calc(50% - 2px),
+      #000000 calc(50% - 2px),
+      rgba(0,0,0,0) calc(50% + 3px)
+      );
+    }
+
+    form#select-menu div.light-on{
+      background: linear-gradient(180deg, 
+      #ff00ff00 calc(50% - 3px), 
+      #81bcff calc(50% - 2px),
+      #81bcff calc(50% - 2px),
+      rgba(0,0,0,0) calc(50% + 3px)
+      );
+      transition: all 500ms;
+    }
+
+    form#select-menu div.light-on#selected-label{
+      background: linear-gradient(180deg, 
+      #ff00ff00 calc(50% - 3px), 
+      #ff81f5 calc(50% - 2px),
+      #ff81f5 calc(50% - 2px),
+      rgba(0,0,0,0) calc(50% + 3px)
+      );
+      transition: all 500ms;
+    }
+
+    /*Label / Text part of the selectable*/
+    form#select-menu div label{
+      text-align: center;
+      flex:1;
+      margin: 4% 4% 4% 0%;
+    }
+
+    /*Changes order of the button/label depending on which part of the grid its located*/
+    form#select-menu div:nth-child(even) label{
+      order: 2;
+      margin: 4% 0% 4% 4%;
+    }
+
+    form#select-menu div:nth-child(even) input{
+      order: 1;
+    }
+
+    /*Radio Button Style*/
+    form#select-menu div input {
+      transform: translateY(-8px);
+      appearance: none;
+      border: 2px solid black;
+      border-radius: 50%;
+      width: 4vh;
+      height: 4vh;
+      margin-bottom: 8px;
+    }
+
+    form#select-menu div.light-off input {
+      background-color: #080808;
+      box-shadow: 0 1px #000000,
+                0 2px #000000,
+                0 3px #000000,
+                0 4px #000000,
+                0 5px #000000,
+                0 6px #000000,
+                0 7px #000000,
+                0 8px #000000,
+                0px 8px 0 5px #000000;     
+    }
+
+    form#select-menu div.light-on input {
+      background-color: #1d1d1d;
+      box-shadow: 0 1px #050505,
+                0 2px #050505,
+                0 3px #050505,
+                0 4px #050505,
+                0 5px #050505,
+                0 6px #050505,
+                0 7px #050505,
+                0 8px #050505,
+                0px 8px 0 5px #81bcff;     
+      transition: all 150ms;
+    }
+
+    form#select-menu div.light-on input:hover {
+      background-color: rgb(44, 63, 68);
+      transition: all 10ms;
+    }
+
+    form#select-menu div.light-off input:checked {
+      transform: translateY(-4px);
+      background-color: #080808;
+      box-shadow: 0 1px #000000,
+                0 2px #000000,
+                0 3px #000000,
+                0 4px #000000,
+                0px 8px 0 5px #000000;    
+    }
+
+    form#select-menu div.light-on input:checked {
+      transform: translateY(-4px);
+      background-color: #201422;
+      box-shadow: 0 1px #050505,
+                0 2px #050505,
+                0 3px #050505,
+                0 4px #050505, 
+                0px 4px 0 5px #ff81f5;
+      transition: all 150ms;
+    }
+
+    /*Text Label Style*/
+    form#select-menu div label {
+      padding: 2% 0% 2% 0%;
+      border-radius: 5px;
+      border-radius: 30px;
+    }
+
+    form#select-menu div.light-off label {
+      background-color: #1e2222;
+    }
+
+    form#select-menu div.light-on label{
+      background-color: #e4fbff;
+      transition: all 150ms;
+    }
+
+    form#select-menu div.light-on#selected-label label{
+      background-color: #ffe4fe;
+      transition: all 150ms;
+    }
+
+
+/*Music Player*/
+  #music-player{
+    height: 80vh;
+    margin: 5% 0% 5% 0%;
+    padding-top: 2%;
+    border: solid black 1px;
+    border-radius: 100px;
+    background: rgba(0, 0, 0, 0.64);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(0.1px);
+    -webkit-backdrop-filter: blur(0.1px);
+    border: 1px solid rgba(0, 0, 0, 0.67);
+    padding: auto;
+    display: flex; 
+    flex-direction: column;
+  }
+    /*Playing Song Info*/
+    #playing-song-info{
+      flex: 1 1 auto;
+      font-size: 2.2em;
+      color: white;
+      display: flex; 
+      flex-direction: column;
+    }
+
+    #playing-song-info div{
+      flex: 1 1 auto;
+      background-size: contain;
+      background-image: url("https://m.media-amazon.com/images/I/61YeJkzhAYL._SL1200_.jpg");
+      background-repeat: no-repeat;
+      background-position: center;
+    }
+
+    #playing-song-info div img{
+      max-width: 100%;
+      max-height: 100%;
+      aspect-ratio: 1/1;
+      box-shadow: 1px 1px #000,
+                  3px 3px #0a0a0a,
+                  5px 5px #1a1a1a;
+    }
+
+    #playing-song-info p{
+      flex: 0 1 auto;
+      margin: 1% 0% 0% 0%;
+      width: 100%;
+      text-align: center;
+    }
+
+    #playing-song-info p b{
+      font-size: 1em;
+      letter-spacing: 1px;
+      margin-bottom: 5px;
+    }
+
+    #control-queue{
+      flex: 0 1 auto;
+      display: flex;
+      flex-direction: row;
+      background-color: #00ADB5;
+      border-radius: 100px;
+      background-color: #000;
+      padding: 1% 0% 1% 0%;
+      height: auto;
+      max-height: 25%;
+      margin-top: 3%;
+      
+    }
+
+    .queue-arrow{
+      flex: 1.5;
+      text-align: center;
+      vertical-align: middle;
+      transform: translateY(-0.6vw);
+    }
+
+    .queue-arrow span{
+      margin: auto;
+      color: #eefffe;
+      font-size: 6vw;
+      text-shadow:
+      2px 0 #00ADB5, -2px 0 #00ADB5, 0 2px #00ADB5, 0 -2px #00ADB5, 1px 1px #00ADB5, -1px -1px #00ADB5, 1px -1px #00ADB5, -1px 1px #00ADB5,
+      0 0px 100px, 
+      0 0 2px,  
+      0 0 0.1em #00ADB5, 
+      0 10px 3px #000;
+      transition: ease-in-out 150ms;
+      
+      
+    }
+
+    .queue-arrow:hover span{
+      max-width:100%;
+      height: 100%;
+      margin: auto;
+      color: #fbeeff;
+      font-size: 6vw;
+      text-shadow:
+      2px 0 #ff81f5, -2px 0 #ff81f5, 0 2px #ff81f5, 0 -2px #ff81f5, 1px 1px #ff81f5, -1px -1px #ff81f5, 1px -1px #ff81f5, -1px 1px #ff81f5,
+      0 0px 100px, 
+      0 0 2px,  
+      0 0 0.1em #ff81f5, 
+      0 10px 3px #000;
+      
+    }
+
+
+    #songs-queue{
+      display: flex;
+      flex-direction: row;
+      flex: 7;
+      background-color: rgb(114, 114, 114);
+      border-radius: 25px;
+      overflow: hidden;
+      padding: 1%;
+      flex-wrap: nowrap;
+      overflow-x: hidden;
+      scroll-behavior: smooth; 
+    }
+
+    #songs-queue span{
+      flex: 0 0 auto;
+      width: 8vw;
+
+    }
+
+    #songs-queue img{
+      transform:
+      translate3d(0, 0, 0)
+      perspective( 15vw )
+      rotateY( -55deg );
+      width: 90%;
+      transition: all 50ms;
+    }
+
+    #songs-queue img:hover{
+      transform:
+      translate3d(0, 0, 0)
+      perspective( 15vw )
+      scale(1.1)
+      rotateY( -25deg );
+      transition: all 50ms;
+    }
+
+    #control-panel{
+      margin: 0% 3% 0% 3%;
+      padding: 1% 0% 1% 0%;
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      max-width: 100%;
+      gap: 10%;
+      border: 0.2em solid black;
+      border-radius: 50px;
+      background-color: #222831;
+    }
+
+    #cp-buttons{
+      display: flex;
+      flex-direction: row;
+      max-width: 100%;
+      margin: 0% 20% 0% 20%;
+      align-items: center;
+      text-align: center;
+      column-gap:10%;
+      height: 100%;
+    }
+
+    #cp-buttons button{
+      margin: 0px;
+      height: 100%;
+      width: 20%;
+      border: 0.2em solid black;
+      border-radius: 15px;
+      background-color: #1d1d1d;
+      box-shadow: 0 1px #050505,
+                0 2px #050505,
+                0px 2px 0 4px #ff81f5; 
+    }
+
+    #cp-text-screen{
+      height: 100%;
+      border: 0.2em solid black;
+      border-radius: 15px;
+      background-color: #1d1d1d;
+      box-shadow: inset 0 1px #050505,
+                0px 0px 0 4px #21ff6b,
+                0 0 2em #c3ffe8; 
+      background-color: #c3fcff;
+      
+    }
+
+    #cp-text-screen-text{
+      background-color: #00ADB5;
+    }
+
+    form#select-menu div.light-on input {
+      background-color: #1d1d1d;
+      box-shadow: 0 1px #050505,
+                0 2px #050505,
+                0 3px #050505,
+                0 4px #050505,
+                0 5px #050505,
+                0 6px #050505,
+                0 7px #050505,
+                0 8px #050505,
+                0px 8px 0 5px #81bcff;     
+      transition: all 150ms;
+    }
+
+
+/*Header*/
+  /*Go back home button / Turn On,Off button*/
+  #home-button{
+    background-color: #373e49;
+    -webkit-appearance: none;
+    box-shadow: -10px -10px 15px #333, 10px 10px 15px rgba(255, 255, 255, 0.12),inset -10px -10px 15px #333,inset 10px 10px 15px rgba(255, 255, 255, 0.12);
+    border-radius: 50%;
+    border: 8px solid #ececec;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    float:right;
+    padding: 1%;
+    margin: 3% 7% 0px 0px;
+    animation: 4s infinite linear button-off-animation;
+  }
+
+  #home-button::after{
+    font-family: FontAwesome;
+    content: "\f011";
+    color: #7a7a7a;
+    font-size: 3em;
 }
 
-header{
-    font-size: 3rem;
+#home-button:checked{
+  box-shadow: -10px -10px 15px rgba(0, 255, 0, 0.12), 10px 10px 15px rgba(70, 70, 70, 0.12);
+    animation: none;
+    border: 8px solid #78fd5d;
 }
 
-footer{
-    font-size: 1.5rem;
+#home-button:checked:after{
+    color: #dadada;
 }
 
-#jukebox-body{
-    background-color: #FCFDF2;
+  /*Header's general rules*/
+  header{
+      font-family: "Vibur";
+      text-align: center;
+      font-size: 3rem;
+      margin: 10%;
+  }
+
+  /*Title general rule*/
+  h1{
+    width: 50%;
+    padding: 0% 25% 0% 25%;
+    margin: 0px;
+  }
+
+  /*When neon light is on*/
+  h1.light-on{
+    transition: all ease-in 1s;
+    color:#eefffe;
+    text-shadow:
+    0 -40px 100px, 
+    0 0 2px, 
+    0 0 1em #00ADB5, 
+    0 0 0.5em #00ADB5, 
+    0 0 0.1em #00ADB5, 
+    0 10px 3px #000;
+  }
+
+  /* Blinking Effect on title*/
+  h1.light-on span {
+      animation: 5s infinite linear blink;
+  }
+
+  h1.light-on span:nth-of-type(2){
+      animation: 8s infinite linear blink;
+  }
+
+  /* Neon bar under the title - HR dimensions*/
+  header > hr{
+      margin-top: 0px;
+      height: 4px;
+      border-radius: 10px;
+  }
+
+  header hr:first-of-type{
+      width: 40%;
+  }
+
+  header hr:last-child{
+      width: 35%;
+  }
+
+
+/*Footer*/
+  /*General rule*/
+  footer{
+      font-family: "Vibur";
+      text-align: center;
+      font-size: 2rem;
+      padding: 5%;
+  }
+
+  /*When neon light is on*/
+  p#neon-footer.light-on{
+    width: 50%;
+    padding: 0% 25% 0% 25%  ;
+    color:rgb(238, 255, 254);
+    text-shadow:
+    0 -40px 100px, 
+    0 0 2px, 
+    0 0 1em #00ADB5, 
+    0 0 0.5em #00ADB5, 
+    0 0 0.1em #00ADB5, 
+    0 10px 3px #000;
+    margin: 0px;
+  }
+
+  /* Blinking Effect on title*/
+  p#neon-footer.light-on span{
+    animation: blink linear infinite 5s;
+  }
+
+  /*neon bar over the footer - HR dimensions*/
+  footer > hr{
+    width:30%;
+    margin-top: 0px;
+    margin-bottom: 2%;
+    height: 5px;
     border-radius: 10px;
-    padding: 5% 10% 5% 10%;
-    margin: 50px 0px 50px 0px;
-    font-size: 1rem;
+  }
+
+/*HR*/
+  /*When lights are on*/
+  hr.light-on{
+    transition: all ease-in 1s;
+    background-color:rgb(255, 225, 253);
+    box-shadow:
+    0 -40px 100px, 
+    0 0 2px, 
+    0 0 15em #b500b5, 
+    0 0 10em #b500b5, 
+    0 0 5em #b500b5, 
+    0 10px 3px #000;
+  }
+
+/*When the lights are OFF*/
+.light-off{
+  color:#333;
+}
+
+/* Animations */
+  /*Neon blink animation*/
+  @keyframes blink {
+    85% {
+      color: inherit;
+      text-shadow: inherit;
+    }
+    86%{
+      color: #333;
+    }
+    87% {
+      
+      text-shadow: none;
+    }
+    88% {
+      color: inherit;
+      text-shadow: inherit;
+    }
+    89% {
+      color: #333;
+      text-shadow: none;
+    }
+    90% {
+      color: inherit;
+      text-shadow: inherit;
+    }
+    92% {
+      color: #333;
+      text-shadow: none;
+    }
+    92.5% {
+      color: inherit;
+      text-shadow: inherit;
+    }
+  }
+
+  /*Neon blink animation*/
+  @keyframes button-off-animation {
+    80% {
+      box-shadow: -10px -10px 15px rgba(255, 255, 255, 0.5), 10px 10px 15px rgba(70, 70, 70, 0.12);
+      border: 8px solid #ececec;
+    }
+    85%{
+      box-shadow: 0px 0px 0px #333, 0px 0px 0px #333;
+      border: 8px solid #333;
+    }
+    90% {
+      box-shadow: -10px -10px 15px rgba(255, 255, 255, 0.5), 10px 10px 15px rgba(70, 70, 70, 0.12);
+      border: 8px solid #ececec;
+    }
+    95%{
+      box-shadow: 0px 0px 0px #333, 0px 0px 0px #333;
+      border: 8px solid #333;
+    }
+  }
+
+
+/* LOGIN FORM */
+
+#overlay {
+  position: fixed;
+  display: none;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0,0,0,0.5);
+  z-index: 2;
+  cursor: pointer;
+}
+
+#login-flex{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    background-color: #ececec;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    font-size: 50px;
+    transform: translate(-50%,-50%);
+    -ms-transform: translate(-50%,-50%);
+    padding: 5%;
+    border-radius: 40%;
+}
+
+@media (max-width: 800px) {
+  #login-flex {
+    flex-direction: column;
+  }
+  #login-flex > div{
+      width: 100%;
+      margin-bottom: 10px;
+  }
+}
+
+/*OTHERS*/
+
+#body-content{
+  border-radius: 20px;
+  padding: 5% 5% 5% 5%;
+  margin: 0px 10% 0px 10%;
+  font-size: 1rem;
+  border-radius: 100px;
+  background-color: #343538;
+}
+
+#body-content.light-on{
+  box-shadow: 0px 0px 7px 7px rgb(46, 215, 221);
+  transition: all 500ms;
 }
