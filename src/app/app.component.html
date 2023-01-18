@@ -31,17 +31,25 @@
     </section>
 
     <section id="music-player">
-      <div id="playing-song-info">
-          <div>
-          </div>
+      <div class="speaker light-off not-playing">
+        <div></div><div></div>
+      </div>
+        <div id="playing-song-info" class="light-off">
+          <div id="playing-song-image"><div></div></div>
           <p><b>California Dreamin'</b></p>
           <p>The Mamas & The Papas</p>
           <p><i>If You Can Believe Your Eyes & Ears (1966)</i></p>
-      </div>
+        </div>
+        <div id="next-song-info" class="not-showing light-off">
+          <img src="https://m.media-amazon.com/images/I/61YeJkzhAYL._SL1200_.jpg">
+          <p><b>California Dreamin'</b></p>
+        </div>
+        <div class="speaker light-off not-playing">
+          <div></div><div></div>
+        </div>
 
-      <div id="control-queue">
-        <div id="queue-left-arrow" class="queue-arrow"><span><</span></div>
-        <div id="songs-queue">
+        <div id="queue-left-arrow" class="queue-arrow light-off"><span><</span></div>
+        <div id="songs-queue" class="not-moving light-off">
           <span><img src="https://m.media-amazon.com/images/I/61YeJkzhAYL._SL1200_.jpg"></span>
           <span><img src="https://m.media-amazon.com/images/I/61YeJkzhAYL._SL1200_.jpg"></span>
           <span><img src="https://m.media-amazon.com/images/I/61YeJkzhAYL._SL1200_.jpg"></span>
@@ -59,8 +67,7 @@
           <span><img src="https://m.media-amazon.com/images/I/61YeJkzhAYL._SL1200_.jpg"></span>
           <span><img src="https://m.media-amazon.com/images/I/61YeJkzhAYL._SL1200_.jpg"></span>
         </div>
-        <div id="queue-right-arrow" class="queue-arrow"><span>></span></div>
-      </div>
+        <div id="queue-right-arrow" class="queue-arrow light-off"><span>></span></div>
     </section>
   </div>
 
