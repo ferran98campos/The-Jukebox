@@ -55,6 +55,7 @@
       align-items: center;
     }
 
+    /*Form styling*/
     form#select-menu div.light-off{
       background: linear-gradient(180deg, 
       #ff00ff00 calc(50% - 3px), 
@@ -282,15 +283,16 @@
     display: flex;
   }
 
-  #playing-song-image.paused{
-    filter: grayscale(40%);
-  }
-
   #playing-song-info p{
     flex: 0 1 auto;
     margin: 1% 0% 0% 0%;
     width: 100%;
     text-align: center;
+    visibility: hidden;
+  }
+
+  #playing-song-info.light-on p.selected{
+    visibility: visible;
   }
 
   #playing-song-info p b{
@@ -310,7 +312,25 @@
     visibility: hidden;
   }
 
+  #playing-song-image.selected:hover{
+    filter: grayscale(20%);
+  }
+
+  #playing-song-image.paused{
+    filter: grayscale(40%);
+  }
+
+  #playing-song-image.paused:hover{
+    filter: grayscale(40%);
+  }
+
+  #playing-song-image.selected:hover div{
+    opacity: 0.6;
+    visibility: visible;
+  }
+
   div.light-on #playing-song-image.paused div{
+    opacity: 1;
     visibility: visible;
   }
 
