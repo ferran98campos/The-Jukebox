@@ -1,20 +1,836 @@
-header, footer{
-    color: #FFE9B1;
+@import url(//fonts.googleapis.com/css?family=Vibur);
+
+/* Jukebox layout*/
+  /*Display flex, in order to put vertical neon lights at sides. Body will be the element in the middle*/
+  div.jukebox-layout{
+    display: flex;
+    flex-direction: row;
+    min-height: 100%;
+    height: fit-content;
+  }
+
+/* Neon lights at left and right side*/
+  /*General rule*/
+  div#neon-side-left, div#neon-side-right{
+    display: block;
+    overflow: auto;
+    width: 1%;
+    margin: 0px 1% 0px 1%;
+    border-radius: 5px;
+  }
+
+  /*When neon light is on*/
+  div#neon-side-left.light-on, div#neon-side-right.light-on{
+    transition: all ease-in 1s;
+    background-color:rgb(255, 238, 254);
+    box-shadow:
+    0 0 2px, 
+    0 0 15em #b500b5, 
+    0 0 10em #b500b5, 
+    0 0 5em #b500b5, 
+    0 10px 3px #000;
+  }
+
+/* Jukebox Body*/
+  /*Dimensions for the jukebox body, which is the central element of the flex, and where all the angular objects will appear*/
+  div#jukebox-body{
+      height: 100%;
+      width: 90%;
+      margin: 0px 2% 0px 2%;
+  }
+
+    /*Select Menu*/
+    form#select-menu{
+      display: grid;
+      grid-template-columns: auto auto;
+      gap: 10%;
+    }
+
+    /* Selectable Item*/
+    form#select-menu div{
+      width: 100%;
+      font-size: 2em;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+    }
+
+    /*Form styling*/
+    form#select-menu div.light-off{
+      background: linear-gradient(180deg, 
+      #ff00ff00 calc(50% - 3px), 
+      #000000 calc(50% - 2px),
+      #000000 calc(50% - 2px),
+      rgba(0,0,0,0) calc(50% + 3px)
+      );
+    }
+
+    form#select-menu div.light-on{
+      background: linear-gradient(180deg, 
+      #ff00ff00 calc(50% - 3px), 
+      #81bcff calc(50% - 2px),
+      #81bcff calc(50% - 2px),
+      rgba(0,0,0,0) calc(50% + 3px)
+      );
+      transition: all 500ms;
+    }
+
+    form#select-menu div.light-on#selected-label{
+      background: linear-gradient(180deg, 
+      #ff00ff00 calc(50% - 3px), 
+      #ff81f5 calc(50% - 2px),
+      #ff81f5 calc(50% - 2px),
+      rgba(0,0,0,0) calc(50% + 3px)
+      );
+      transition: all 500ms;
+    }
+
+    /*Label / Text part of the selectable*/
+    form#select-menu div label{
+      text-align: center;
+      flex:1;
+      margin: 4% 4% 4% 0%;
+    }
+
+    /*Changes order of the button/label depending on which part of the grid its located*/
+    form#select-menu div:nth-child(even) label{
+      order: 2;
+      margin: 4% 0% 4% 4%;
+    }
+
+    form#select-menu div:nth-child(even) input{
+      order: 1;
+    }
+
+    /*Radio Button Style*/
+    form#select-menu div input {
+      transform: translateY(-8px);
+      appearance: none;
+      border: 2px solid black;
+      border-radius: 50%;
+      width: 4vh;
+      height: 4vh;
+      margin-bottom: 8px;
+    }
+
+    form#select-menu div.light-off input {
+      background-color: #080808;
+      box-shadow: 0 1px #000000,
+                0 2px #000000,
+                0 3px #000000,
+                0 4px #000000,
+                0 5px #000000,
+                0 6px #000000,
+                0 7px #000000,
+                0 8px #000000,
+                0px 8px 0 5px #000000;     
+    }
+
+    form#select-menu div.light-on input {
+      background-color: #1d1d1d;
+      box-shadow: 0 1px #050505,
+                0 2px #050505,
+                0 3px #050505,
+                0 4px #050505,
+                0 5px #050505,
+                0 6px #050505,
+                0 7px #050505,
+                0 8px #050505,
+                0px 8px 0 5px #81bcff;     
+      transition: all 150ms;
+    }
+
+    form#select-menu div.light-on input:hover {
+      background-color: rgb(44, 63, 68);
+      transition: all 10ms;
+    }
+
+    form#select-menu div.light-off input:checked {
+      transform: translateY(-4px);
+      background-color: #080808;
+      box-shadow: 0 1px #000000,
+                0 2px #000000,
+                0 3px #000000,
+                0 4px #000000,
+                0px 8px 0 5px #000000;    
+    }
+
+    form#select-menu div.light-on input:checked {
+      transform: translateY(-4px);
+      background-color: #201422;
+      box-shadow: 0 1px #050505,
+                0 2px #050505,
+                0 3px #050505,
+                0 4px #050505, 
+                0px 4px 0 5px #ff81f5;
+      transition: all 150ms;
+    }
+
+    /*Text Label Style*/
+    form#select-menu div label {
+      padding: 2% 0% 2% 0%;
+      border-radius: 5px;
+      border-radius: 30px;
+    }
+
+    form#select-menu div.light-off label {
+      background-color: #1e2222;
+    }
+
+    form#select-menu div.light-on label{
+      background-color: #e4fbff;
+      transition: all 150ms;
+    }
+
+    form#select-menu div.light-on#selected-label label{
+      background-color: #ffe4fe;
+      transition: all 150ms;
+    }
+
+
+/*Music Player*/
+  #music-player{
+    height: 80vh;
+    margin: 5% 0% 5% 0%;
+    padding: 1% 1% 1% 1%;
+    border: solid black 1px;
+    border-radius: 100px;
+    background: rgba(0, 0, 0, 0.64);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(0.1px);
+    -webkit-backdrop-filter: blur(0.1px);
+    border: 1px solid rgba(0, 0, 0, 0.67);
+    padding: auto;
+    display: grid;
+    grid-template-columns: 9% 10% 10% 10% 10% 10% 10% 10% 9%;
+    grid-template-rows: 8% 7% 7% 7% 7% 7% 7% 7% 8%;
+    row-gap: 4.37%;
+  }
+
+  /*Upper Part of Music Player (Speakers + current playing song)*/
+
+  /*Speakers*/
+    .speaker{
+      width: 100%;
+      height:100%;
+      grid-row-start: 1;
+      grid-row-end: 8;
+      background-color: #343538;
+      border-radius: 100px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .speaker div{
+      background: #1a1a1a;
+      background: radial-gradient(circle, rgba(26,26,26,1) 0%, rgba(26,26,26,1) 30%, rgba(0,0,0,1) 31%, rgba(26,26,26,1) 32%, rgba(26,26,26,1) 100%);
+      border-radius: 10000px;
+      aspect-ratio: 1/1;
+      margin: 5%;
+      border: solid black 3px;
+      max-width: 100%;
+      max-height: 100%;
+    }
+
+    /*Speakers positioning inside grid*/
+    .speaker div:first-child{
+      flex:3;
+    }
+
+    .speaker div:nth-child(2){
+      flex:2;
+    }
+
+    #music-player div:nth-child(1){
+        grid-column-start: 1;
+        grid-column-end: 4;
+    }
+
+    #music-player div:nth-child(4){
+      grid-column-start: 8;
+      grid-column-end: 11;
+  }
+
+    /*Speakers with lights on*/
+    .speaker.light-on{
+      box-shadow: 0px 0px 7px 7px rgb(46, 221, 119);
+    }
+
+    .speaker.light-on.playing div{
+      animation: 2s infinite linear speaker-animation-short;
+    }
+
+  /*Playing Song Info*/
+  #playing-song-info{
+    flex: 1 1 auto;
+    font-size: 2.2em;
+    color: white;
+    display: flex; 
+    flex-direction: column;
+    grid-row-start: 2;
+    grid-row-end: 7;
+    grid-column-start: 4;
+    grid-column-end: 8;
+    
+  }
+
+  #playing-song-image{
+    flex: 1 1 auto;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    display: flex;
+  }
+
+  #playing-song-info p{
+    flex: 0 1 auto;
+    margin: 1% 0% 0% 0%;
+    width: 100%;
     text-align: center;
+    visibility: hidden;
+  }
+
+  #playing-song-info.light-on p.selected{
+    visibility: visible;
+  }
+
+  #playing-song-info p b{
+    font-size: 1em;
+    letter-spacing: 1px;
+    margin-bottom: 5px;
+  }
+  
+  #playing-song-image div{
+    height: 25%;
+    width: 25%;
+    margin:auto;
+    background-image: url('/assets/pause-button.png');
+    background-size:contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    visibility: hidden;
+  }
+
+  #playing-song-image.selected:hover{
+    filter: grayscale(20%);
+  }
+
+  #playing-song-image.paused{
+    filter: grayscale(40%);
+  }
+
+  #playing-song-image.paused:hover{
+    filter: grayscale(40%);
+  }
+
+  #playing-song-image.selected:hover div{
+    opacity: 0.6;
+    visibility: visible;
+  }
+
+  div.light-on #playing-song-image.paused div{
+    opacity: 1;
+    visibility: visible;
+  }
+
+  #playing-song-info.light-off{
+    visibility: hidden;
+  }
+
+  /*Next song span*/
+  #next-song-info{
+    width: 75%;
+    height: 98%;
+    font-size: 2.2em;
+    color: white;
+    background: rgb(26,26,26);
+    grid-row-start: 7;
+    grid-row-end: 7;
+    grid-column-start: 4;
+    grid-column-end: 8;
+    justify-self: center;
+    border-radius: 20px;
+    padding: 1%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: solid #fcb2ff 5px;
+    box-shadow:
+    0 0 1em #af00b5;
+    z-index: -1;
+  }
+
+  #next-song-info.light-off{
+    visibility: hidden;
+  }
+
+  #next-song-info.not-showing.light-on{
+    opacity: 0;
+    animation: 0.2s linear fadeOutBottom;
+  }
+
+  #next-song-info.showing.light-on{
+    opacity: 1;
+    animation: 0.2s linear fadeInBottom;
+  }
+
+  #next-song-info img{
+    height: 100%;
+    aspect-ratio: 1/1;
+    margin-left: 10%;
+  }
+
+  #next-song-info p{
+    width: 100%;
+    text-align: center;
+    margin-right: 10%;
+  }
+
+  /*Down Part of Music Player (Playlist, song selector)*/
+  /*Playlist Arrows*/
+  .queue-arrow{
+    flex: 1.5;
+    text-align: center;
+    vertical-align: middle;
+    transform: translateY(-0.6vw);
+    grid-row-start: 8;
+    grid-row-end: 10;
+  }
+
+  .queue-arrow span{
+    margin: auto;
+    color: #343538;
+    font-size: 6vw;
+  }
+
+  /*Playlist Arrows with Lights on*/
+  .queue-arrow.light-on span{
+    color: #eefffe;
+    text-shadow:
+    2px 0 #00ADB5, -2px 0 #00ADB5, 0 2px #00ADB5, 0 -2px #00ADB5, 1px 1px #00ADB5, -1px -1px #00ADB5, 1px -1px #00ADB5, -1px 1px #00ADB5,
+    0 0px 100px, 
+    0 0 2px,  
+    0 0 0.1em #00ADB5, 
+    0 10px 3px #000;
+    transition: ease-in-out 150ms;
+  }
+
+  .queue-arrow.light-on:hover span{
+    color: #fbeeff;
+    font-size: 6vw;
+    text-shadow:
+    2px 0 #ff81f5, -2px 0 #ff81f5, 0 2px #ff81f5, 0 -2px #ff81f5, 1px 1px #ff81f5, -1px -1px #ff81f5, 1px -1px #ff81f5, -1px 1px #ff81f5,
+    0 0px 100px, 
+    0 0 2px,  
+    0 0 0.1em #ff81f5, 
+    0 10px 3px #000;
+  }
+
+  /*Playlist Screen*/
+  #songs-queue{
+    display: flex;
+    flex-direction: row;
+    border-radius: 25px;
+    padding: 1%;
+    overflow: hidden;
+    grid-column-start: 2;
+    grid-column-end: 10;
+    grid-row-start: 8;
+    grid-row-end: 10;
+  }
+
+  #songs-queue.light-off{
+    background: #343538;
+  }
+
+  #songs-queue.light-on.not-moving{
+    background: rgb(117,139,137);
+    background: linear-gradient(0deg, #758b89 0%, #9ebdba 22%, #d7feff 85%, #d7fffe 96%, #c3ffff 100%);
+    box-shadow:
+    0 0 2em #00b5b5;
+  }
+
+  #songs-queue.light-on.moving{
+    background: rgb(134,117,139);
+    background: linear-gradient(0deg, rgba(134,117,139,1) 0%, rgba(177,158,189,1) 22%, rgba(241,215,255,1) 85%, rgba(243,215,255,1) 96%, rgba(213,180,221,1) 100%);
+    box-shadow:
+    0 0 2em #af00b5;
+  }
+
+    #songs-queue span{
+      height: 100%;
+      aspect-ratio: 1/1;
+    }
+
+    #songs-queue.light-off span{
+      opacity: 0;
+      height: 100%;
+      aspect-ratio: 1/1;
+    }
+
+    #songs-queue img{
+      transform:
+      translate3d(0, 0, 0)
+      perspective( 15vw )
+      rotateY( -55deg );
+      width: 90%;
+      transition: all 50ms;
+    }
+
+    #songs-queue span#selected-song img{
+            transform:
+      translate3d(0, 0, 0)
+      perspective( 15vw )
+      scale(1.1)
+      rotateY( -16deg );
+      transition: all 50ms;
+      filter: drop-shadow(8px 8px 10px rgb(0, 31, 46));
+    }
+
+
+    #songs-queue.not-moving img{
+      transform:
+      translate3d(0, 0, 0)
+      perspective( 15vw )
+      rotateY( -55deg );
+      width: 90%;
+      transition: all 50ms;
+      filter: drop-shadow(8px 8px 10px rgb(0, 41, 46)) sepia(100%) hue-rotate(120deg);
+    }
+
+    #songs-queue.moving img{
+      transform:
+      translate3d(0, 0, 0)
+      perspective( 15vw )
+      rotateY( -55deg );
+      width: 90%;
+      transition: all 50ms;
+      filter: drop-shadow(8px 8px 10px rgb(0, 41, 46)) sepia(100%) hue-rotate(320deg);
+    }
+
+    #songs-queue span:hover img{
+      transform:
+      translate3d(0, 0, 0)
+      perspective( 15vw )
+      scale(1.1)
+      rotateY( -25deg );
+      transition: all 50ms;
+      filter: drop-shadow(8px 8px 10px rgb(0, 41, 46)) sepia(0%) hue-rotate(0deg);
+    }
+
+    form#select-menu div.light-on input {
+      background-color: #1d1d1d;
+      box-shadow: 0 1px #050505,
+                0 2px #050505,
+                0 3px #050505,
+                0 4px #050505,
+                0 5px #050505,
+                0 6px #050505,
+                0 7px #050505,
+                0 8px #050505,
+                0px 8px 0 5px #81bcff;     
+      transition: all 150ms;
+    }
+
+
+/*Header*/
+  /*Go back home button / Turn On,Off button*/
+  #home-button{
+    background-color: #373e49;
+    -webkit-appearance: none;
+    box-shadow: -10px -10px 15px #333, 10px 10px 15px rgba(255, 255, 255, 0.12),inset -10px -10px 15px #333,inset 10px 10px 15px rgba(255, 255, 255, 0.12);
+    border-radius: 50%;
+    border: 8px solid #ececec;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    float:right;
+    padding: 1%;
+    margin: 3% 7% 0px 0px;
+    animation: 4s infinite linear button-off-animation;
+  }
+
+  #home-button::after{
+    font-family: FontAwesome;
+    content: "\f011";
+    color: #7a7a7a;
+    font-size: 3em;
 }
 
-header{
-    font-size: 3rem;
+#home-button:checked{
+  box-shadow: -10px -10px 15px rgba(0, 255, 0, 0.12), 10px 10px 15px rgba(70, 70, 70, 0.12);
+    animation: none;
+    border: 8px solid #78fd5d;
 }
 
-footer{
-    font-size: 1.5rem;
+#home-button:checked:after{
+    color: #dadada;
 }
 
-#jukebox-body{
-    background-color: #FCFDF2;
+  /*Header's general rules*/
+  header{
+      font-family: "Vibur";
+      text-align: center;
+      font-size: 3rem;
+      margin: 10%;
+  }
+
+  /*Title general rule*/
+  h1{
+    width: 50%;
+    padding: 0% 25% 0% 25%;
+    margin: 0px;
+  }
+
+  /*When neon light is on*/
+  h1.light-on{
+    transition: all ease-in 1s;
+    color:#eefffe;
+    text-shadow:
+    0 -40px 100px, 
+    0 0 2px, 
+    0 0 1em #00ADB5, 
+    0 0 0.5em #00ADB5, 
+    0 0 0.1em #00ADB5, 
+    0 10px 3px #000;
+  }
+
+  /* Blinking Effect on title*/
+  h1.light-on span {
+      animation: 5s infinite linear blink;
+  }
+
+  h1.light-on span:nth-of-type(2){
+      animation: 8s infinite linear blink;
+  }
+
+  /* Neon bar under the title - HR dimensions*/
+  header > hr{
+      margin-top: 0px;
+      height: 4px;
+      border-radius: 10px;
+  }
+
+  header hr:first-of-type{
+      width: 40%;
+  }
+
+  header hr:last-child{
+      width: 35%;
+  }
+
+
+/*Footer*/
+  /*General rule*/
+  footer{
+      font-family: "Vibur";
+      text-align: center;
+      font-size: 2rem;
+      padding: 5%;
+  }
+
+  /*When neon light is on*/
+  p#neon-footer.light-on{
+    width: 50%;
+    padding: 0% 25% 0% 25%  ;
+    color:rgb(238, 255, 254);
+    text-shadow:
+    0 -40px 100px, 
+    0 0 2px, 
+    0 0 1em #00ADB5, 
+    0 0 0.5em #00ADB5, 
+    0 0 0.1em #00ADB5, 
+    0 10px 3px #000;
+    margin: 0px;
+  }
+
+  /* Blinking Effect on title*/
+  p#neon-footer.light-on span{
+    animation: blink linear infinite 5s;
+  }
+
+  /*neon bar over the footer - HR dimensions*/
+  footer > hr{
+    width:30%;
+    margin-top: 0px;
+    margin-bottom: 2%;
+    height: 5px;
     border-radius: 10px;
-    padding: 5% 10% 5% 10%;
-    margin: 50px 0px 50px 0px;
-    font-size: 1rem;
+  }
+
+/*HR*/
+  /*When lights are on*/
+  hr.light-on{
+    transition: all ease-in 1s;
+    background-color:rgb(255, 225, 253);
+    box-shadow:
+    0 -40px 100px, 
+    0 0 2px, 
+    0 0 15em #b500b5, 
+    0 0 10em #b500b5, 
+    0 0 5em #b500b5, 
+    0 10px 3px #000;
+  }
+
+/*When the lights are OFF*/
+.light-off{
+  color:#333;
+}
+
+/* Animations */
+  /*Neon blink animation*/
+  @keyframes blink {
+    85% {
+      color: inherit;
+      text-shadow: inherit;
+    }
+    86%{
+      color: #333;
+    }
+    87% {
+      
+      text-shadow: none;
+    }
+    88% {
+      color: inherit;
+      text-shadow: inherit;
+    }
+    89% {
+      color: #333;
+      text-shadow: none;
+    }
+    90% {
+      color: inherit;
+      text-shadow: inherit;
+    }
+    92% {
+      color: #333;
+      text-shadow: none;
+    }
+    92.5% {
+      color: inherit;
+      text-shadow: inherit;
+    }
+  }
+
+  /*Neon blink animation*/
+  @keyframes button-off-animation {
+    80% {
+      box-shadow: -10px -10px 15px rgba(255, 255, 255, 0.5), 10px 10px 15px rgba(70, 70, 70, 0.12);
+      border: 8px solid #ececec;
+    }
+    85%{
+      box-shadow: 0px 0px 0px #333, 0px 0px 0px #333;
+      border: 8px solid #333;
+    }
+    90% {
+      box-shadow: -10px -10px 15px rgba(255, 255, 255, 0.5), 10px 10px 15px rgba(70, 70, 70, 0.12);
+      border: 8px solid #ececec;
+    }
+    95%{
+      box-shadow: 0px 0px 0px #333, 0px 0px 0px #333;
+      border: 8px solid #333;
+    }
+  }
+
+  /*Speaker animation*/
+  @keyframes speaker-animation {
+    40% {
+      margin:5%;
+    }
+    45%{
+      margin:3%;
+    }
+    50%{
+      margin:5%;
+    }
+  }
+
+  @keyframes speaker-animation-short {
+    46% {
+      margin:5%;
+    }
+    48%{
+      margin:3%;
+    }
+    50%{
+      margin:5%;
+    }
+  }
+
+    @keyframes fadeInBottom {
+      from {
+          opacity: 0;
+          transform: translateY(100%);
+      }
+      to { opacity: 1 }
+    }
+
+    @keyframes fadeOutBottom {
+      from {
+          opacity: 1;
+      }
+      to { 
+        opacity: 0;
+        transform: translateY(100%);
+      }
+    }
+
+
+/* LOGIN FORM */
+
+#overlay {
+  position: fixed;
+  display: none;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0,0,0,0.5);
+  z-index: 2;
+  cursor: pointer;
+}
+
+#login-flex{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    background-color: #ececec;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    font-size: 50px;
+    transform: translate(-50%,-50%);
+    -ms-transform: translate(-50%,-50%);
+    padding: 5%;
+    border-radius: 40%;
+}
+
+@media (max-width: 800px) {
+  #login-flex {
+    flex-direction: column;
+  }
+  #login-flex > div{
+      width: 100%;
+      margin-bottom: 10px;
+  }
+}
+
+/*OTHERS*/
+
+#body-content{
+  border-radius: 20px;
+  padding: 5% 5% 5% 5%;
+  margin: 0px 10% 0px 10%;
+  font-size: 1rem;
+  border-radius: 100px;
+  background-color: #343538;
+}
+
+#body-content.light-on{
+  box-shadow: 0px 0px 7px 7px rgb(46, 215, 221);
+  transition: all 500ms;
 }
