@@ -9,8 +9,11 @@ import { SpotifyService } from '../spotify.service';
 export class CallbackComponent implements OnInit {
 
 
-  constructor(private spotifyService: SpotifyService) {}
+  constructor(private spotifyService: SpotifyService) {
 
-  ngOnInit(): void {}
+  }
+
+  ngOnInit(): void {
+  }
 
 }

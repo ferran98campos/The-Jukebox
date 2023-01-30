@@ -458,18 +458,18 @@
     0 0 2em #af00b5;
   }
 
-    #songs-queue span{
+  :host ::ng-deep #songs-queue span{
       height: 100%;
       aspect-ratio: 1/1;
     }
 
-    #songs-queue.light-off span{
+    :host #songs-queue.light-off span{
       opacity: 0;
       height: 100%;
       aspect-ratio: 1/1;
     }
 
-    #songs-queue img{
+    :host ::ng-deep #songs-queue span img{
       transform:
       translate3d(0, 0, 0)
       perspective( 15vw )
@@ -478,7 +478,7 @@
       transition: all 50ms;
     }
 
-    #songs-queue span#selected-song img{
+    :host ::ng-deep #songs-queue span#selected-song img{
             transform:
       translate3d(0, 0, 0)
       perspective( 15vw )
@@ -489,7 +489,7 @@
     }
 
 
-    #songs-queue.not-moving img{
+    :host ::ng-deep #songs-queue.not-moving img{
       transform:
       translate3d(0, 0, 0)
       perspective( 15vw )
@@ -499,7 +499,7 @@
       filter: drop-shadow(8px 8px 10px rgb(0, 41, 46)) sepia(100%) hue-rotate(120deg);
     }
 
-    #songs-queue.moving img{
+    :host ::ng-deep #songs-queue.moving img{
       transform:
       translate3d(0, 0, 0)
       perspective( 15vw )
@@ -509,7 +509,7 @@
       filter: drop-shadow(8px 8px 10px rgb(0, 41, 46)) sepia(100%) hue-rotate(320deg);
     }
 
-    #songs-queue span:hover img{
+    :host ::ng-deep #songs-queue span:hover img{
       transform:
       translate3d(0, 0, 0)
       perspective( 15vw )

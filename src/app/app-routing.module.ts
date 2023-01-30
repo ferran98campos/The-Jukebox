@@ -5,9 +5,7 @@ import { SpotifyLoginComponent } from './spotify-login/spotify-login.component';
 import {WrapComponent} from './wrap/wrap.component'
 
 const routes: Routes = [
-  { path: '', component: SpotifyLoginComponent },
-  { path: 'callback', component: CallbackComponent },
-  { path: 'wrap-up', component: WrapComponent },
+  { path: '**', component: SpotifyLoginComponent },
 ];
 
 @NgModule({
