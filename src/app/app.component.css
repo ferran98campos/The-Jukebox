@@ -463,7 +463,7 @@
       aspect-ratio: 1/1;
     }
 
-    :host #songs-queue.light-off span{
+    :host ::ng-deep #songs-queue.light-off span{
       opacity: 0;
       height: 100%;
       aspect-ratio: 1/1;

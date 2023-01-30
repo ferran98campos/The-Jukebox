@@ -240,9 +240,13 @@ export class AppComponent {
       currentlyPlayingSongDetails!.item(1).innerHTML = this.playlist[position].getArtist();
       currentlyPlayingSongDetails!.item(2).innerHTML = this.playlist[position].getAlbum();
 
-
       //Activate Speaker Animation
       this.setSpeakerAnimation(true);
+
+      //Play Song
+      this.spotifyService.playTrack(this.playlist[position].getUri(), true);
+
+      currentlyPlayingSongImage!.classList.remove('paused');
     }
   }
 
@@ -251,8 +255,10 @@ export class AppComponent {
     if(this.lights){
       if(this.songPlaying){
         image.classList.remove('paused');
+        this.spotifyService.playTrack('', false);
       }else{
         image.classList.add('paused');
+        this.spotifyService.pauseTrack();
       }
 
       //Deactivate Speaker Animation
@@ -302,7 +308,7 @@ class Track{
     this.artist = track['album']['artists'][0]['name'];
     this.album = track['album']['name'];
     this.img = track['album']['images'][0]['url'];
-    this.uri = track['id'];
+    this.uri = track['uri'];
   }
 
   getName() : string{
@@ -321,7 +327,7 @@ class Track{
     return this.img;
   }
 
-  getId() : string{
+  getUri() : string{
     return this.uri;
   }
 }

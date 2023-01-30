@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment.prod';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
-import { HttpClient, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpResponse, HttpHeaders } from '@angular/common/http';
 import { LocalStorageService } from 'angular-2-local-storage';
 import * as CryptoJS from 'crypto-js';
 import { Observable, throwError } from 'rxjs';
@@ -16,7 +16,10 @@ export class SpotifyService {
   private scope : string;
 
   constructor(private router: Router, private route: ActivatedRoute, private storage: LocalStorageService, private http: HttpClient) { 
-    this.scope = "user-top-read";
+    this.scope = "user-top-read user-modify-playback-state user-modify-playback-state";
+
+    //This needs to be asked to the user 
+    this.storage.set('device_id', "72d6cafe2c92d7925375215f741823585db6d19f");
 
     this.router.events.subscribe((data) =>
     {
@@ -171,6 +174,101 @@ export class SpotifyService {
         return key + '=' + object[key]
       }).join('&');
   }
+
+  //Sets track as next in the queue and plays it
+  async playTrack(song_uri:string, addToQueue:boolean) : Promise<void>{
+    await this.requestToken();
+
+    if(addToQueue){
+      await this.addTrackToQueue(song_uri);
+      await this.jumpToNextTrack();
+    }
+      
+    const headers = { 
+      'Accept': 'application/json',
+      'Content-Type' : 'application/json',
+      'Authorization': 'Bearer ' + this.storage.get('token')
+    };
+    
+    return new Promise<void>((resolve, reject) => {
+      this.http.put<any>(environment.play_track_url  + "?device_id=" + this.storage.get('device_id'), null, { headers }).subscribe({
+        next: () => {
+            console.log('Song Paused!');
+            resolve();
+        },
+        error: error => {
+          console.error('There was an error!', error);
+          reject();
+        }
+      })
+    });
+
+  }
+
+  async pauseTrack() : Promise<void>{
+    const headers = { 
+      'Accept': 'application/json',
+      'Content-Type' : 'application/json',
+      'Authorization': 'Bearer ' + this.storage.get('token')
+    };
+    
+    return new Promise<void>((resolve, reject) => {
+      this.http.put<any>(environment.pause_track_url  + "?device_id=" + this.storage.get('device_id'), null, { headers }).subscribe({
+        next: () => {
+            console.log('Song Paused!');
+            resolve();
+        },
+        error: error => {
+          console.error('There was an error!', error);
+          reject();
+        }
+      })
+    });
+  }
+
+  async addTrackToQueue(song_uri:string) : Promise<void>{
+    const headers = { 
+      'Accept': 'application/json',
+      'Content-Type' : 'application/json',
+      'Authorization': 'Bearer ' + this.storage.get('token')
+    };
+    
+    return new Promise<void>((resolve, reject) => {
+      console.log(headers);
+      this.http.post<any>(environment.queue_url + "?uri=" + song_uri + "&device_id=" + this.storage.get('device_id'), null, { headers }).subscribe({
+        next: () => {
+            console.log('Song was added to queue!');
+            resolve();
+        },
+        error: error => {
+          console.error('There was an error!', error);
+          reject();
+        }
+      })
+    });
+  }
+
+  async jumpToNextTrack() : Promise<void>{
+    const headers = { 
+      'Accept': 'application/json',
+      'Content-Type' : 'application/json',
+      'Authorization': 'Bearer ' + this.storage.get('token')
+    };
+    
+    return new Promise<void>((resolve, reject) => {
+      this.http.post<any>(environment.next_track_url + "?device_id=" + this.storage.get('device_id'), null, { headers }).subscribe({
+        next: () => {
+            console.log('Skipped to Next Song!');
+            resolve();
+        },
+        error: error => {
+          console.error('There was an error!', error);
+          reject();
+        }
+      })
+    });
+  }
+  
 
   //Gets top 50 most listened tracks in the last months
   async getTopListenedTracks(term:string) : Promise<Array<any>>{
