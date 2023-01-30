@@ -74,7 +74,7 @@ export class SpotifyService {
   getCallback() : void {
     //Gets the code and state returned from the Spotify Login page only in case we are in the /callback route
     
-    if(window.location.href.indexOf(environment.spotify_redirect_url) > -1 || window.location.href != "http://localhost:4200/"){
+    if(window.location.href.length > environment.spotify_redirect_url.length){
 
     this.route.queryParams.pipe(
       take(1))
