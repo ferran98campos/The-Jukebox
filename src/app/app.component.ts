@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { SpotifyService } from './spotify.service';
+import { LocalStorageService } from 'angular-2-local-storage';
 
 @Component({
   selector: 'app-root',
@@ -20,7 +21,7 @@ export class AppComponent {
   //Variables related to playlist
   private playlist:Array<Track>;
 
-  constructor(private spotifyService:SpotifyService){
+  constructor(private spotifyService:SpotifyService, private storage: LocalStorageService){
     //CSS Variables initialization
     this.lights = false;
     this.scrollInterval = 0; 
@@ -33,6 +34,7 @@ export class AppComponent {
 
   //Adds an event listener to the Spotify Button
   ngOnInit(): void {
+
     //Home Button
     const button = document.getElementById('home-button');
     button?.addEventListener('click', this.turnLights.bind(this));
@@ -82,7 +84,7 @@ export class AppComponent {
 
 
   //This method changes the CSS for the Jukebox's lights to be on/off
-  turnLights(): void{
+  async turnLights(): Promise<void>{
     //Define variables
     var array;
     var addingClass;
@@ -98,9 +100,6 @@ export class AppComponent {
       array = document.getElementsByClassName("light-off");
       addingClass = "light-on";
       deletingClass = "light-off";
-
-      //Login into Spotify if necessary
-      this.spotifyService.login();
     }
 
     //Delete the last class, and add the new one
@@ -271,7 +270,6 @@ export class AppComponent {
   loadPlaylist(value: string): void{
     //Most listened songs in the last months
     this.spotifyService.getTopListenedTracks("long_term").then(tracks=> {
-      console.log(tracks);
       const playlistTag = document.getElementById('songs-queue');
 
       playlistTag!.innerHTML = "";

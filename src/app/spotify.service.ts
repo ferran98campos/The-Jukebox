@@ -7,6 +7,14 @@ import * as CryptoJS from 'crypto-js';
 import { Observable, throwError } from 'rxjs';
 import { catchError, retry, map, take } from 'rxjs/operators';
 
+declare global {
+  interface Window {
+    onSpotifyWebPlaybackSDKReady:() => void;
+    Spotify: any;
+    setPlayer: any;
+  }
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -14,12 +22,11 @@ import { catchError, retry, map, take } from 'rxjs/operators';
 export class SpotifyService {
 
   private scope : string;
+  private SDKAttached: Boolean;
 
   constructor(private router: Router, private route: ActivatedRoute, private storage: LocalStorageService, private http: HttpClient) { 
-    this.scope = "user-top-read user-modify-playback-state user-modify-playback-state";
-
-    //This needs to be asked to the user 
-    this.storage.set('device_id', "72d6cafe2c92d7925375215f741823585db6d19f");
+    this.scope = "user-top-read user-modify-playback-state user-modify-playback-state user-read-playback-state streaming user-read-email user-read-private";
+    this.SDKAttached = false;
 
     this.router.events.subscribe((data) =>
     {
@@ -28,7 +35,11 @@ export class SpotifyService {
             this.getCallback();
         }
     });
-    
+
+    //Login Spotify if necessary
+    if(this.storage.get('token') == undefined){
+      this.login();
+    }
   }
 
   //Generates a random string. Its length matches the one passed to the function
@@ -74,6 +85,38 @@ export class SpotifyService {
 
   }
 
+  attachSDK() : void{
+    const script = document.createElement("script");
+    script.src = "https://sdk.scdn.co/spotify-player.js";
+    script.async = true;
+
+    document.body.appendChild(script);
+    
+    window.onSpotifyWebPlaybackSDKReady = () => {
+
+      const player = new window.Spotify.Player({
+            name: 'Web Playback SDK',
+            getOAuthToken: (cb:any) => { cb(this.storage.get('token')); },
+            volume: 0.5
+      });
+
+      player.addListener('ready', ({ device_id } : {device_id:string}) => {
+          this.storage.set('device_id', device_id);
+          this.transferPlayback();
+          console.log('SDK Device Ready');
+          
+      });
+
+      player.addListener('not_ready', ({ device_id }: {device_id:string}) => {
+          console.log('Device ID has gone offline', device_id);
+      });
+
+      player.connect();
+      this.SDKAttached = true;
+      
+    };
+  }
+
   getCallback() : void {
     //Gets the code and state returned from the Spotify Login page only in case we are in the /callback route
     
@@ -98,43 +141,60 @@ export class SpotifyService {
 
   //Gets a Token from Spotify API. If 'Invalid Authorization code' is obtained, then that means we already have a token.
   requestToken(): Promise<void> {
-    const headers = { 
-      'Authorization': 'Basic ' + (btoa(environment.client_id + ':' + environment.client_secret)) , 
-      'Content-Type' : 'application/x-www-form-urlencoded'
-    };
 
-    const body : {[key:string]: string} = { 
-      grant_type : 'authorization_code',
-      code : this.storage.get('code'),
-      redirect_uri : environment.spotify_redirect_url,
-      clientId : environment.client_id,
-      code_verifier : this.storage.get('codeVerifier')
-    }
-    
-
-    return new Promise<void>((resolve, reject) => {
-      this.http.post<any>(environment.spotify_token_url, this.JSONStringfy(body), { headers }).subscribe({
-        next: data => {
-          console.log('Token obtained!');
-            this.storage.set('refresh_token', data['refresh_token']);
-            this.storage.set('token', data['access_token']);
-            resolve();
-        },
-        error: async error => {
-          const error_description = error['error']['error_description'];
-          if( error_description== 'Invalid authorization code' || error_description == 'Authorization code expired'){
+    //If token is expired, refresh it
+    if(this.storage.get('token_expires_at') != undefined){
+        return new Promise<void>(async (resolve, reject) => {
+          var expires : number = this.storage.get('token_expires_at');
+          if( expires < Date.now()){
             await this.refreshToken(); 
-            resolve(); 
           }
-          else{
-            console.error('There was an error!', error);
-            reject();
-          }
+          resolve(); 
+        });
+
+    }else{
+        //Otherwise, request the token from scratch
+        const headers = { 
+          'Authorization': 'Basic ' + (btoa(environment.client_id + ':' + environment.client_secret)) , 
+          'Content-Type' : 'application/x-www-form-urlencoded'
+        };
+
+        const body : {[key:string]: string} = { 
+          grant_type : 'authorization_code',
+          code : this.storage.get('code'),
+          redirect_uri : environment.spotify_redirect_url,
+          clientId : environment.client_id,
+          code_verifier : this.storage.get('codeVerifier')
         }
-      });
+        
 
-    });
+        return new Promise<void>((resolve, reject) => {
+          this.http.post<any>(environment.spotify_token_url, this.JSONStringfy(body), { headers }).subscribe({
+            next: data => {
+                console.log('Token obtained!');
+                this.storage.set('refresh_token', data['refresh_token']);
+                this.storage.set('token', data['access_token']);
+                this.storage.set('token_got_at', Date.now());
+                this.storage.set('token_expires_at', Date.now() + data['expires_in']);
+                if(!this.SDKAttached)
+                  this.attachSDK();
+                resolve();
+            },
+            error: async error => {
+              const error_description = error['error']['error_description'];
+              if( error_description== 'Invalid authorization code' || error_description == 'Authorization code expired'){
+                await this.refreshToken(); 
+                resolve(); 
+              }
+              else{
+                console.error('There was an error!', error);
+                reject();
+              }
+            }
+          });
 
+        });
+      }
   }
 
   refreshToken(): Promise<void> {
@@ -155,7 +215,11 @@ export class SpotifyService {
       this.http.post<any>(environment.spotify_token_url, this.JSONStringfy(body), { headers }).subscribe({
         next: data => {
             console.log('Token was refreshed');
-            this.storage.set('token', data['access_token'])
+            this.storage.set('token', data['access_token']);
+            this.storage.set('token_got_at', Date.now());
+            this.storage.set('token_expires_at', Date.now() + data['expires_in']);
+            if(!this.SDKAttached)
+              this.attachSDK();
             resolve();
         },
         error: error => {
@@ -173,6 +237,37 @@ export class SpotifyService {
       return Object.keys(object).map(function(key) {
         return key + '=' + object[key]
       }).join('&');
+  }
+
+  async transferPlayback() : Promise<void>{
+    const headers = { 
+      'Accept': 'application/json',
+      'Content-Type' : 'application/json',
+      'Authorization': 'Bearer ' + this.storage.get('token')
+    };
+
+    const data : {[key:string]: any} = { 
+      "device_ids" : [this.storage.get('device_id')],
+      "play" : "true"
+    };
+
+    return new Promise<void>((resolve, reject) => {
+      this.http.put<any>(environment.player_url, data, { headers }).subscribe({
+        next: data => {
+            console.log('Token was refreshed');
+            this.storage.set('token', data['access_token']);
+            this.storage.set('token_got_at', Date.now());
+            this.storage.set('token_expires_at', Date.now() + data['expires_in']);
+            if(!this.SDKAttached)
+              this.attachSDK();
+            resolve();
+        },
+        error: error => {
+          console.error('There was an error!', error);
+          reject();
+        }
+      })
+    });
   }
 
   //Sets track as next in the queue and plays it
@@ -193,7 +288,7 @@ export class SpotifyService {
     return new Promise<void>((resolve, reject) => {
       this.http.put<any>(environment.play_track_url  + "?device_id=" + this.storage.get('device_id'), null, { headers }).subscribe({
         next: () => {
-            console.log('Song Paused!');
+            console.log('Song Playing!');
             resolve();
         },
         error: error => {
@@ -234,7 +329,6 @@ export class SpotifyService {
     };
     
     return new Promise<void>((resolve, reject) => {
-      console.log(headers);
       this.http.post<any>(environment.queue_url + "?uri=" + song_uri + "&device_id=" + this.storage.get('device_id'), null, { headers }).subscribe({
         next: () => {
             console.log('Song was added to queue!');
@@ -272,7 +366,6 @@ export class SpotifyService {
 
   //Gets top 50 most listened tracks in the last months
   async getTopListenedTracks(term:string) : Promise<Array<any>>{
-
     await this.requestToken();
 
     const headers = { 
@@ -292,5 +385,5 @@ export class SpotifyService {
         }
       })
     });
-  }
+    }
 }
