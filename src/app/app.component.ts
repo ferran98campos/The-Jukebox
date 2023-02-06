@@ -267,31 +267,42 @@ export class AppComponent {
     }
   }
 
+  //Executes a playlist builder algorithm depending on user option
   loadPlaylist(value: string): void{
-    //Most listened songs in the last months
-    this.spotifyService.getTopListenedTracks("long_term").then(tracks=> {
-      const playlistTag = document.getElementById('songs-queue');
-
-      playlistTag!.innerHTML = "";
-
-      var span, img;
-
-      for(let track of tracks){
-        //Adding tracks to array
-        this.playlist.push(new Track(track))
-
-        //Add images to playlist HTML tag
-        span = document.createElement("span");
-        img = document.createElement("img");
-        img.src = track['album']['images'][0]['url'];
-        span.appendChild(img);
-        playlistTag!.appendChild(span);
-      }
-
-      this.addNextSongFunctionality();
-    });
-    
+    console.log(value)
+    if(value == "most_listened"){
+      //Most listened songs in the last months
+      this.spotifyService.getTopListenedTracks("long_term").then(tracks=> {
+        this.modifyPlaylist(tracks);
+      });
+    }else if(value == "playlist_mix"){
+      this.spotifyService.getPlaylistMix().then(tracks => this.modifyPlaylist(tracks));
+    }
   }
+
+  //Loads tracks data into the playlist view
+  modifyPlaylist(tracks:Array<any>):void{
+    const playlistTag = document.getElementById('songs-queue');
+
+        playlistTag!.innerHTML = "";
+
+        var span, img;
+
+        for(let track of tracks){
+          //Adding tracks to array
+          this.playlist.push(new Track(track))
+
+          //Add images to playlist HTML tag
+          span = document.createElement("span");
+          img = document.createElement("img");
+          img.src = track['album']['images'][0]['url'];
+          span.appendChild(img);
+          playlistTag!.appendChild(span);
+        }
+
+        this.addNextSongFunctionality();
+  }
+
 }
 
 class Track{

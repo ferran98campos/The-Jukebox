@@ -5,13 +5,11 @@ import { AppComponent } from './app.component';
 import { HttpClientModule } from '@angular/common/http';
 import { LocalStorageModule } from 'angular-2-local-storage';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { SpotifyPlaybackComponent } from './spotify-playback/spotify-playback.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    SpotifyPlaybackComponent,
   ],
   imports: [
     BrowserModule,

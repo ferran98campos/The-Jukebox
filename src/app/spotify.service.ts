@@ -25,7 +25,7 @@ export class SpotifyService {
   private SDKAttached: Boolean;
 
   constructor(private router: Router, private route: ActivatedRoute, private storage: LocalStorageService, private http: HttpClient) { 
-    this.scope = "user-top-read user-modify-playback-state user-modify-playback-state user-read-playback-state streaming user-read-email user-read-private";
+    this.scope = "user-top-read user-modify-playback-state user-modify-playback-state user-read-playback-state streaming user-read-email user-read-private playlist-read-private playlist-read-collaborative";
     this.SDKAttached = false;
 
     this.router.events.subscribe((data) =>
@@ -385,5 +385,119 @@ export class SpotifyService {
         }
       })
     });
+  }
+
+  //Gets top 50 most listened tracks in the last months
+  async getPlaylistMix() : Promise<any[]>{
+    await this.requestToken();
+
+    await this.getUserID();
+
+    const playlist = this.getPlaylistMixSongDistribution(await this.getUserPlaylist());
+
+    var promiseArray : Promise<any>[] = [];
+
+    const headers = { 
+      'Authorization': 'Bearer ' + this.storage.get('token') , 
+      'Content-Type' : 'application/json'
+    };
+
+    for(let i = 0; i < playlist.length; i++){
+      promiseArray.push(new Promise<any>((resolve, reject) => {
+        this.http.get<any>(environment.playlist_tracks_url.replace("playlist_id", playlist[i][0]) + playlist[i][1], { headers }).subscribe({
+          next: data => {
+              console.log('Tracks received!');
+              resolve(data);
+          },
+          error: error => {
+            console.error('There was an error!', error);
+            reject();
+          }
+        })
+      }))
     }
+
+    
+    return Promise.all(promiseArray).then((values) => {
+      return values.map(playlist => playlist.items).flat(1).map((playlist:any) => playlist.track);
+    });
+  
+  }
+
+  //Returns how many songs will be picked up from each playlist.
+  getPlaylistMixSongDistribution(playlists:[]): any{
+    var songDistribution : any[] = [];
+
+    const totalSongs = playlists.map((value,index) => { return value[1]; }).reduce((songsSum, playlistSongs) => songsSum + playlistSongs, 0);
+    
+    //If we cannot reach 50 songs with these playlists, just show all of them
+    if(totalSongs < 50){
+      return playlists;
+    }else{
+      //If we have more than 50, we need to decide how many songs from each playlist we have to retrieve. 
+      //The script wants to grab the same amount of songs from each playlist, but some may have few songs in it
+      //In that case, we just grab all of them. Otherwise we grab as many as we can.
+      for(let i = 0; i < playlists.length; i++){
+        songDistribution.push([playlists[i][0], Math.min(Math.ceil(50 / playlists.length), playlists[i][1])])
+      }
+      return songDistribution;
+    }
+
+  }
+
+  //Gets 10 playlists from the user
+  async getUserPlaylist() : Promise<[]>{
+    await this.requestToken();
+    await this.getUserID();
+
+    const headers = { 
+      'Authorization': 'Bearer ' + this.storage.get('token') , 
+      'Content-Type' : 'application/json'
+    };
+
+    return new Promise<[]>((resolve, reject) => {
+      this.http.get<any>(environment.playlist_list_url.replace("user_id", this.storage.get("user_ID")), { headers }).subscribe({
+        next: data => {
+            console.log('Playlists received!');
+            resolve(data.items.map((playlist:any) => [playlist.id , playlist.tracks.total]));
+        },
+        error: error => {
+          console.error('There was an error!', error);
+          reject();
+        }
+      })
+    });
+  }
+
+  //Gets User ID. If we already have it stored, we can avoid retrievening it again
+  async getUserID() : Promise<void>{
+    if(this.storage.get("user_ID") == undefined){
+      await this.requestToken();
+
+      const headers = { 
+        'Authorization': 'Bearer ' + this.storage.get('token') , 
+        'Content-Type' : 'application/json'
+      };
+  
+      return new Promise<void>((resolve, reject) => {
+          this.http.get<any>(environment.user_url, { headers }).subscribe({
+          next: data => {
+              console.log('UserID received!');
+              this.storage.set('user_ID', data['id']);
+              console.log(data['id']);
+              resolve(data['id']);
+              
+          },
+          error: error => {
+            console.error('There was an error!', error);
+            reject();
+          }
+        })
+      });
+    }else{
+      return new Promise<void>((resolve, reject) => {
+        resolve(this.storage.get('user_ID'));
+      });
+    }
+  }
 }
