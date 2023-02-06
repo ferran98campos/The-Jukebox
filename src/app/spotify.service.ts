@@ -24,8 +24,10 @@ export class SpotifyService {
   private scope : string;
   private SDKAttached: Boolean;
 
+  
+
   constructor(private router: Router, private route: ActivatedRoute, private storage: LocalStorageService, private http: HttpClient) { 
-    this.scope = "user-top-read user-modify-playback-state user-modify-playback-state user-read-playback-state streaming user-read-email user-read-private playlist-read-private playlist-read-collaborative";
+    this.scope = "user-top-read user-modify-playback-state user-modify-playback-state user-read-playback-state streaming user-read-email user-read-private playlist-read-private playlist-read-collaborative user-follow-read user-read-playback-state";
     this.SDKAttached = false;
 
     this.router.events.subscribe((data) =>
@@ -34,12 +36,14 @@ export class SpotifyService {
         {
             this.getCallback();
         }
+
     });
 
-    //Login Spotify if necessary
-    if(this.storage.get('token') == undefined){
+    if(this.storage.get("code") == undefined)
       this.login();
-    }
+
+      this.isQueueEmpty().then(result => ((!result) ? alert("Make sure to empty your Spotify track queue before you use this app to have the best experience"):console.log("Queue empty")));
+
   }
 
   //Generates a random string. Its length matches the one passed to the function
@@ -119,9 +123,8 @@ export class SpotifyService {
 
   getCallback() : void {
     //Gets the code and state returned from the Spotify Login page only in case we are in the /callback route
-    
     if(window.location.href.length > environment.spotify_redirect_url.length){
-
+    
     this.route.queryParams.pipe(
       take(1))
       .subscribe(
@@ -136,7 +139,7 @@ export class SpotifyService {
           this.router.navigate(['/#'], { queryParams: { error: error}});  
         }
       );
-    }  
+    }
   }
 
   //Gets a Token from Spotify API. If 'Invalid Authorization code' is obtained, then that means we already have a token.
@@ -350,7 +353,7 @@ export class SpotifyService {
     };
     
     return new Promise<void>((resolve, reject) => {
-      this.http.post<any>(environment.next_track_url + "?device_id=" + this.storage.get('device_id'), null, { headers }).subscribe({
+      this.http.post<any>(environment.next_track_url + this.storage.get('device_id'), null, { headers }).subscribe({
         next: () => {
             console.log('Skipped to Next Song!');
             resolve();
@@ -447,8 +450,6 @@ export class SpotifyService {
 
   //Gets 10 playlists from the user
   async getUserPlaylist() : Promise<[]>{
-    await this.requestToken();
-    await this.getUserID();
 
     const headers = { 
       'Authorization': 'Bearer ' + this.storage.get('token') , 
@@ -484,7 +485,7 @@ export class SpotifyService {
           next: data => {
               console.log('UserID received!');
               this.storage.set('user_ID', data['id']);
-              console.log(data['id']);
+              this.storage.set('user_country', data['country']);
               resolve(data['id']);
               
           },
@@ -500,4 +501,74 @@ export class SpotifyService {
       });
     }
   }
+
+  //Returns the user's followed artists
+  async getFollowedArtists():Promise<[]>{
+    const headers = { 
+      'Authorization': 'Bearer ' + this.storage.get('token') , 
+      'Content-Type' : 'application/json'
+    };
+
+    return new Promise<[]>((resolve, reject) => {
+      this.http.get<any>(environment.user_following_artists, { headers }).subscribe({
+        next: data => {
+            console.log('Artists received!');
+            resolve(data.artists.items.map((artists:any) => artists.id));
+        },
+        error: error => {
+          console.error('There was an error!', error);
+          reject();
+        }
+      })
+    });
+  }
+
+  //Returns an artists most listened tracks
+  async getMostListenedTracks(artist_id:string):Promise<[]>{
+    await this.getUserID();
+
+    const headers = { 
+      'Authorization': 'Bearer ' + this.storage.get('token') , 
+      'Content-Type' : 'application/json'
+    };
+
+    return new Promise<[]>((resolve, reject) => {
+      this.http.get<any>(environment.artist_most_listened_tracks.replace("{id}", artist_id) + this.storage.get("user_country"), { headers }).subscribe({
+        next: data => {
+            console.log('Most listened tracks from artist received!');
+            resolve(data.tracks);
+        },
+        error: error => {
+          console.error('There was an error!', error);
+          reject();
+        }
+      })
+    });
+  }
+
+  async getOneArtistPlaylist():Promise<[]>{
+    const artists = await this.getFollowedArtists();
+    var chosen_artist : string = artists[Math.floor(Math.random() * (artists.length - 0 + 1) + 0)];
+    return await this.getMostListenedTracks(chosen_artist);
+  }
+
+  async isQueueEmpty():Promise<Boolean>{
+    const headers = { 
+      'Authorization': 'Bearer ' + this.storage.get('token') , 
+      'Content-Type' : 'application/json'
+    };
+
+    return new Promise<Boolean>((resolve, reject) => {
+      this.http.get<any>(environment.queue_checker, { headers }).subscribe({
+        next: data => {
+            ((data.queue.length == 0)? resolve(true):resolve(false));
+        },
+        error: error => {
+          console.error('There was an error!', error);
+          reject();
+        }
+      })
+    });
+  }
+
 }

@@ -95,11 +95,17 @@ export class AppComponent {
       array = document.getElementsByClassName("light-on");
       addingClass = "light-off";
       deletingClass = "light-on";
+      console.log(this.songPlaying)
+      if(this.songPlaying)
+        await this.spotifyService.pauseTrack();
+
     }else{
       //If lights are off, then change their class to light-on
       array = document.getElementsByClassName("light-off");
       addingClass = "light-on";
       deletingClass = "light-off";
+      if(this.songPlaying)
+        await this.spotifyService.playTrack('', false);
     }
 
     //Delete the last class, and add the new one
@@ -107,6 +113,8 @@ export class AppComponent {
       array[0].classList.add(addingClass);
       array[0].classList.remove(deletingClass);
     }
+
+
 
     //Change the boolean value of this.lights to the new one
     this.lights = !this.lights;
@@ -246,6 +254,8 @@ export class AppComponent {
       this.spotifyService.playTrack(this.playlist[position].getUri(), true);
 
       currentlyPlayingSongImage!.classList.remove('paused');
+
+      this.songPlaying = true;
     }
   }
 
@@ -269,14 +279,23 @@ export class AppComponent {
 
   //Executes a playlist builder algorithm depending on user option
   loadPlaylist(value: string): void{
-    console.log(value)
+
+    if(value=="surprise"){
+      var random : number = Math.floor(Math.random() * (2 - 0 + 1) + 0);
+      ((random==0) ? value="most_listened" : (random==1) ? value="playlist_mix" : value="artist")
+    }
+
     if(value == "most_listened"){
       //Most listened songs in the last months
       this.spotifyService.getTopListenedTracks("long_term").then(tracks=> {
         this.modifyPlaylist(tracks);
       });
     }else if(value == "playlist_mix"){
+      //Song mix from some of the user playlist
       this.spotifyService.getPlaylistMix().then(tracks => this.modifyPlaylist(tracks));
+    }else if(value== "artist"){
+      //Top listened tracks from a random artist the user is following
+      this.spotifyService.getOneArtistPlaylist().then(tracks => this.modifyPlaylist(tracks));
     }
   }
 
@@ -285,9 +304,12 @@ export class AppComponent {
     const playlistTag = document.getElementById('songs-queue');
 
         playlistTag!.innerHTML = "";
-
         var span, img;
 
+        //Empty the playlist array
+        this.playlist = new Array();
+        console.log(tracks);
+        //And fill it again with the received tracks
         for(let track of tracks){
           //Adding tracks to array
           this.playlist.push(new Track(track))
@@ -299,7 +321,7 @@ export class AppComponent {
           span.appendChild(img);
           playlistTag!.appendChild(span);
         }
-
+        console.log(this.playlist);
         this.addNextSongFunctionality();
   }
 
