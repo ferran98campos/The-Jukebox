@@ -308,7 +308,6 @@ export class AppComponent {
 
         //Empty the playlist array
         this.playlist = new Array();
-        console.log(tracks);
         //And fill it again with the received tracks
         for(let track of tracks){
           //Adding tracks to array
@@ -321,7 +320,6 @@ export class AppComponent {
           span.appendChild(img);
           playlistTag!.appendChild(span);
         }
-        console.log(this.playlist);
         this.addNextSongFunctionality();
   }
 
