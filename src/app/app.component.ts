@@ -293,11 +293,10 @@ export class AppComponent {
         image.classList.add('paused');
         this.spotifyService.pauseTrack();
       }
-
-      //Deactivate Speaker Animation
-      this.setSpeakerAnimation(this.songPlaying);
       
       this.songPlaying = !this.songPlaying;
+      //Deactivate Speaker Animation
+      this.setSpeakerAnimation(this.songPlaying);
     }
   }
 
