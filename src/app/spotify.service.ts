@@ -241,30 +241,33 @@ export class SpotifyService {
   }
 
   async transferPlayback() : Promise<void>{
-    const headers = { 
-      'Accept': 'application/json',
-      'Content-Type' : 'application/json',
-      'Authorization': 'Bearer ' + this.storage.get('token')
-    };
 
-    const data : {[key:string]: any} = { 
-      "device_ids" : [this.storage.get('device_id')],
-      "play" : "false"
-    };
-
-    return new Promise<void>((resolve, reject) => {
-      this.http.put<any>(environment.player_url, data, { headers }).subscribe({
-        next: data => {
-            console.log('Player has been tranferred to this website');
-            if(!this.SDKAttached)
-              this.attachSDK();
-            resolve();
-        },
-        error: error => {
-          console.error('There was an error!', error);
-          reject();
-        }
-      })
+    await this.checkDevices().then(onlyDevice =>{
+      const headers = { 
+        'Accept': 'application/json',
+        'Content-Type' : 'application/json',
+        'Authorization': 'Bearer ' + this.storage.get('token')
+      };
+  
+      const data : {[key:string]: any} = { 
+        "device_ids" : [this.storage.get('device_id')],
+        "play" : "false"
+      };
+  
+      return new Promise<void>((resolve, reject) => {
+        this.http.put<any>(environment.player_url, data, { headers }).subscribe({
+          next: data => {
+              console.log('Player has been tranferred to this website');
+              if(!this.SDKAttached)
+                this.attachSDK();
+              resolve();
+          },
+          error: error => {
+            console.error('There was an error!', error);
+            reject();
+          }
+        })
+      });
     });
   }
 
@@ -400,21 +403,33 @@ export class SpotifyService {
       'Content-Type' : 'application/json'
     };
 
-    for(let i = 0; i < playlist.length; i++){
-      promiseArray.push(new Promise<any>((resolve, reject) => {
-        this.http.get<any>(environment.playlist_tracks_url.replace("playlist_id", playlist[i][0]) + playlist[i][1], { headers }).subscribe({
-          next: data => {
-              resolve(data);
-          },
-          error: error => {
-            console.error('There was an error!', error);
-            reject();
-          }
-        })
-      }))
+    var songCount:number = 0;
+
+    if(playlist.length == 0){
+      alert("It seems you don't have any playlist. Make sure to create at list one before using this feature");
     }
 
-    
+    for(let i = 0; i < playlist.length; i++){
+      songCount += playlist[i][1];
+      if(playlist[i][1] > 0){
+        promiseArray.push(new Promise<any>((resolve, reject) => {
+          this.http.get<any>(environment.playlist_tracks_url.replace("playlist_id", playlist[i][0]) + playlist[i][1], { headers }).subscribe({
+            next: data => {
+                resolve(data);
+            },
+            error: error => {
+              console.error('There was an error!', error);
+              reject();
+            }
+          })
+        }))
+      }
+    }
+
+    if(songCount == 0){
+      console.log("It seems that most of your playlists are empty. Try adding songs to them before using this option.");
+    }
+
     return Promise.all(promiseArray).then((values) => {
       console.log('Tracks received!');
       return values.map(playlist => playlist.items).flat(1).map((playlist:any) => playlist.track);
@@ -520,25 +535,31 @@ export class SpotifyService {
 
   //Returns an artists most listened tracks
   async getMostListenedTracks(artist_id:string):Promise<[]>{
-    await this.getUserID();
+    if(artist_id == undefined){
+      alert("It seems you are not following any artist. Make sure to follow one before using this feature.");
+      return new Promise<[]>((resolve, reject) => {resolve([])});
+    }else{
+      await this.getUserID();
 
-    const headers = { 
-      'Authorization': 'Bearer ' + this.storage.get('token') , 
-      'Content-Type' : 'application/json'
-    };
+      const headers = { 
+        'Authorization': 'Bearer ' + this.storage.get('token') , 
+        'Content-Type' : 'application/json'
+      };
+  
+      return new Promise<[]>((resolve, reject) => {
+        this.http.get<any>(environment.artist_most_listened_tracks.replace("{id}", artist_id) + this.storage.get("user_country"), { headers }).subscribe({
+          next: data => {
+              console.log('Most listened tracks from artist received!');
+              resolve(data.tracks);
+          },
+          error: error => {
+            console.error('There was an error!', error);
+            reject();
+          }
+        })
+      });
+    }
 
-    return new Promise<[]>((resolve, reject) => {
-      this.http.get<any>(environment.artist_most_listened_tracks.replace("{id}", artist_id) + this.storage.get("user_country"), { headers }).subscribe({
-        next: data => {
-            console.log('Most listened tracks from artist received!');
-            resolve(data.tracks);
-        },
-        error: error => {
-          console.error('There was an error!', error);
-          reject();
-        }
-      })
-    });
   }
 
   async getOneArtistPlaylist():Promise<[]>{
@@ -579,6 +600,28 @@ export class SpotifyService {
         next: data => {
             console.log("Current song was checked");
             resolve(data);
+        },
+        error: error => {
+          console.error('There was an error!', error);
+          reject();
+        }
+      })
+    });
+  }
+
+  async checkDevices():Promise<boolean>{
+    await this.getUserID();
+
+    const headers = { 
+      'Authorization': 'Bearer ' + this.storage.get('token') , 
+      'Content-Type' : 'application/json'
+    };
+
+    return new Promise<boolean>((resolve, reject) => {
+      this.http.get<any>(environment.devices, { headers }).subscribe({
+        next: data => {
+            console.log("User devices: " + data.devices.length);
+            resolve(data.devices.length.length > 1);
         },
         error: error => {
           console.error('There was an error!', error);
