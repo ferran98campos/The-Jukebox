@@ -41,9 +41,6 @@ export class SpotifyService {
 
     if(this.storage.get("code") == undefined)
       this.login();
-
-      this.isQueueEmpty().then(result => ((!result) ? alert("Make sure to empty your Spotify track queue before you use this app to have the best experience"):console.log("Queue empty")));
-
   }
 
   //Generates a random string. Its length matches the one passed to the function
@@ -152,6 +149,8 @@ export class SpotifyService {
           if( expires < Date.now()){
             await this.refreshToken(); 
           }
+          if(!this.SDKAttached)
+            this.attachSDK();
           resolve(); 
         });
 
@@ -161,7 +160,6 @@ export class SpotifyService {
           'Authorization': 'Basic ' + (btoa(environment.client_id + ':' + environment.client_secret)) , 
           'Content-Type' : 'application/x-www-form-urlencoded'
         };
-
         const body : {[key:string]: string} = { 
           grant_type : 'authorization_code',
           code : this.storage.get('code'),
@@ -178,7 +176,7 @@ export class SpotifyService {
                 this.storage.set('refresh_token', data['refresh_token']);
                 this.storage.set('token', data['access_token']);
                 this.storage.set('token_got_at', Date.now());
-                this.storage.set('token_expires_at', Date.now() + data['expires_in']);
+                this.storage.set('token_expires_at', Date.now() + (data['expires_in']*1000) - 30000); //We convert the 'expires_in int from seconds to miliseconds. Then we substract 30000 ms (30seconds) to avoid running out of time
                 if(!this.SDKAttached)
                   this.attachSDK();
                 resolve();
@@ -220,7 +218,7 @@ export class SpotifyService {
             console.log('Token was refreshed');
             this.storage.set('token', data['access_token']);
             this.storage.set('token_got_at', Date.now());
-            this.storage.set('token_expires_at', Date.now() + data['expires_in']);
+            this.storage.set('token_expires_at', Date.now() + (data['expires_in'] * 1000) - 30000); //We convert the 'expires_in int from seconds to miliseconds. Then we substract 30000 ms (30seconds) to avoid running out of time
             if(!this.SDKAttached)
               this.attachSDK();
             resolve();
@@ -251,16 +249,13 @@ export class SpotifyService {
 
     const data : {[key:string]: any} = { 
       "device_ids" : [this.storage.get('device_id')],
-      "play" : "true"
+      "play" : "false"
     };
 
     return new Promise<void>((resolve, reject) => {
       this.http.put<any>(environment.player_url, data, { headers }).subscribe({
         next: data => {
-            console.log('Token was refreshed');
-            this.storage.set('token', data['access_token']);
-            this.storage.set('token_got_at', Date.now());
-            this.storage.set('token_expires_at', Date.now() + data['expires_in']);
+            console.log('Player has been tranferred to this website');
             if(!this.SDKAttached)
               this.attachSDK();
             resolve();
@@ -289,7 +284,7 @@ export class SpotifyService {
     };
     
     return new Promise<void>((resolve, reject) => {
-      this.http.put<any>(environment.play_track_url  + "?device_id=" + this.storage.get('device_id'), null, { headers }).subscribe({
+      this.http.put<any>(environment.play_track_url, null, { headers }).subscribe({
         next: () => {
             console.log('Song Playing!');
             resolve();
@@ -311,7 +306,7 @@ export class SpotifyService {
     };
     
     return new Promise<void>((resolve, reject) => {
-      this.http.put<any>(environment.pause_track_url  + "?device_id=" + this.storage.get('device_id'), null, { headers }).subscribe({
+      this.http.put<any>(environment.pause_track_url, null, { headers }).subscribe({
         next: () => {
             console.log('Song Paused!');
             resolve();
@@ -409,7 +404,6 @@ export class SpotifyService {
       promiseArray.push(new Promise<any>((resolve, reject) => {
         this.http.get<any>(environment.playlist_tracks_url.replace("playlist_id", playlist[i][0]) + playlist[i][1], { headers }).subscribe({
           next: data => {
-              console.log('Tracks received!');
               resolve(data);
           },
           error: error => {
@@ -422,6 +416,7 @@ export class SpotifyService {
 
     
     return Promise.all(promiseArray).then((values) => {
+      console.log('Tracks received!');
       return values.map(playlist => playlist.items).flat(1).map((playlist:any) => playlist.track);
     });
   
@@ -570,5 +565,28 @@ export class SpotifyService {
       })
     });
   }
+
+  async checkCurrentSong():Promise<[]>{
+    await this.getUserID();
+
+    const headers = { 
+      'Authorization': 'Bearer ' + this.storage.get('token') , 
+      'Content-Type' : 'application/json'
+    };
+
+    return new Promise<[]>((resolve, reject) => {
+      this.http.get<any>(environment.current_track + this.storage.get("user_country"), { headers }).subscribe({
+        next: data => {
+            console.log("Current song was checked");
+            resolve(data);
+        },
+        error: error => {
+          console.error('There was an error!', error);
+          reject();
+        }
+      })
+    });
+  }
+
 
 }

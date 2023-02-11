@@ -14,6 +14,9 @@ export class AppComponent {
   //Variables related to CSS
   private lights:Boolean;
   private scrollInterval:number;
+  private songInterval:number;
+  private actualSong:String;
+  private actualSongTimeLeft:number;
   private lastHover:Date;
   private songPlaying:Boolean;
   private showSongDetails:Boolean;
@@ -25,6 +28,9 @@ export class AppComponent {
     //CSS Variables initialization
     this.lights = false;
     this.scrollInterval = 0; 
+    this.songInterval = 0; 
+    this.actualSong = "";
+    this.actualSongTimeLeft=0;
     this.lastHover = new Date();
     this.songPlaying = false;
     this.showSongDetails = false;
@@ -95,12 +101,12 @@ export class AppComponent {
       array = document.getElementsByClassName("light-on");
       addingClass = "light-off";
       deletingClass = "light-on";
-      console.log(this.songPlaying)
       if(this.songPlaying)
         await this.spotifyService.pauseTrack();
 
     }else{
       //If lights are off, then change their class to light-on
+      await this.spotifyService.requestToken();
       array = document.getElementsByClassName("light-off");
       addingClass = "light-on";
       deletingClass = "light-off";
@@ -253,6 +259,24 @@ export class AppComponent {
       //Play Song
       this.spotifyService.playTrack(this.playlist[position].getUri(), true);
 
+      //This parts controls how much time is left for the song to finish. Once it finishes, a random song is selected so that the jukebox can contnue playing songs
+      if(this.actualSong != ""){
+        window.clearInterval(this.songInterval);
+      }
+        
+      this.actualSong = this.playlist[position].getUri();
+      this.actualSongTimeLeft = this.playlist[position].getDuration();
+      this.songInterval = window.setInterval(() => {
+        if(this.actualSongTimeLeft <= 0){
+          const queueElements = this.getAllSpanElementsFromElement('songs-queue');
+          i = Math.floor(Math.random() * queueElements.length);
+          //New song randomly selected
+          console.log("End of Song, next one is being randomly selected from playlist");
+          this.selectSong(queueElements![i], i);
+        }else if(this.lights && this.songPlaying)
+          this.actualSongTimeLeft -= 100;
+      }, 100);
+
       currentlyPlayingSongImage!.classList.remove('paused');
 
       this.songPlaying = true;
@@ -262,7 +286,7 @@ export class AppComponent {
   //Pauses or plays a song. Changes the CSS by adding or removing the class 'paused'
   playSong(image: HTMLElement): void{
     if(this.lights){
-      if(this.songPlaying){
+      if(!this.songPlaying){
         image.classList.remove('paused');
         this.spotifyService.playTrack('', false);
       }else{
@@ -276,6 +300,7 @@ export class AppComponent {
       this.songPlaying = !this.songPlaying;
     }
   }
+
 
   //Executes a playlist builder algorithm depending on user option
   loadPlaylist(value: string): void{
@@ -331,6 +356,7 @@ class Track{
   private album : string;
   private img : string;
   private uri : string;
+  private duration:number;
 
   constructor(track : any){
     this.name = track['name'];
@@ -338,6 +364,7 @@ class Track{
     this.album = track['album']['name'];
     this.img = track['album']['images'][0]['url'];
     this.uri = track['uri'];
+    this.duration = track['duration_ms'];
   }
 
   getName() : string{
@@ -358,5 +385,9 @@ class Track{
 
   getUri() : string{
     return this.uri;
+  }
+
+  getDuration():number{
+    return this.duration;
   }
 }

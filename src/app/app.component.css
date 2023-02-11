@@ -127,6 +127,7 @@
     }
 
     form#select-menu div.light-on input {
+      cursor: pointer;
       background-color: #1d1d1d;
       box-shadow: 0 1px #050505,
                 0 2px #050505,
@@ -281,6 +282,7 @@
     background-repeat: no-repeat;
     background-position: center;
     display: flex;
+    cursor: pointer;  
   }
 
   #playing-song-info p{
@@ -414,6 +416,7 @@
     0 0 0.1em #00ADB5, 
     0 10px 3px #000;
     transition: ease-in-out 150ms;
+    cursor: pointer;
   }
 
   .queue-arrow.light-on:hover span{
@@ -459,79 +462,82 @@
   }
 
   :host ::ng-deep #songs-queue span{
+      cursor: pointer;
       height: 100%;
       aspect-ratio: 1/1;
     }
 
-    :host ::ng-deep #songs-queue.light-off span{
-      opacity: 0;
-      height: 100%;
-      aspect-ratio: 1/1;
-    }
+  :host ::ng-deep #songs-queue.light-off span{
+    cursor: auto;
+    opacity: 0;
+    height: 100%;
+    aspect-ratio: 1/1;
+  }
 
-    :host ::ng-deep #songs-queue span img{
-      transform:
-      translate3d(0, 0, 0)
-      perspective( 15vw )
-      rotateY( -55deg );
-      width: 90%;
-      transition: all 50ms;
-    }
+  :host ::ng-deep #songs-queue span img{
+    transform:
+    translate3d(0, 0, 0)
+    perspective( 15vw )
+    rotateY( -55deg );
+    width: 90%;
+    transition: all 50ms;
+  }
 
-    :host ::ng-deep #songs-queue span#selected-song img{
-            transform:
-      translate3d(0, 0, 0)
-      perspective( 15vw )
-      scale(1.1)
-      rotateY( -16deg );
-      transition: all 50ms;
-      filter: drop-shadow(8px 8px 10px rgb(0, 31, 46));
-    }
+  :host ::ng-deep #songs-queue span#selected-song img{
+    cursor:auto;
+    transform:
+    translate3d(0, 0, 0)
+    perspective( 15vw )
+    scale(1.1)
+    rotateY( -16deg );
+    transition: all 50ms;
+    filter: drop-shadow(8px 8px 10px rgb(0, 31, 46));
+  }
 
 
-    :host ::ng-deep #songs-queue.not-moving img{
-      transform:
-      translate3d(0, 0, 0)
-      perspective( 15vw )
-      rotateY( -55deg );
-      width: 90%;
-      transition: all 50ms;
-      filter: drop-shadow(8px 8px 10px rgb(0, 41, 46)) sepia(100%) hue-rotate(120deg);
-    }
+  :host ::ng-deep #songs-queue.not-moving img{
+    transform:
+    translate3d(0, 0, 0)
+    perspective( 15vw )
+    rotateY( -55deg );
+    width: 90%;
+    transition: all 50ms;
+    filter: drop-shadow(8px 8px 10px rgb(0, 41, 46)) sepia(100%) hue-rotate(120deg);
+  }
 
-    :host ::ng-deep #songs-queue.moving img{
-      transform:
-      translate3d(0, 0, 0)
-      perspective( 15vw )
-      rotateY( -55deg );
-      width: 90%;
-      transition: all 50ms;
-      filter: drop-shadow(8px 8px 10px rgb(0, 41, 46)) sepia(100%) hue-rotate(320deg);
-    }
+  :host ::ng-deep #songs-queue.moving img{
+    transform:
+    translate3d(0, 0, 0)
+    perspective( 15vw )
+    rotateY( -55deg );
+    width: 90%;
+    transition: all 50ms;
+    filter: drop-shadow(8px 8px 10px rgb(0, 41, 46)) sepia(100%) hue-rotate(320deg);
+  }
 
-    :host ::ng-deep #songs-queue span:hover img{
-      transform:
-      translate3d(0, 0, 0)
-      perspective( 15vw )
-      scale(1.1)
-      rotateY( -25deg );
-      transition: all 50ms;
-      filter: drop-shadow(8px 8px 10px rgb(0, 41, 46)) sepia(0%) hue-rotate(0deg);
-    }
+  :host ::ng-deep #songs-queue span:hover img{
+    transform:
+    translate3d(0, 0, 0)
+    perspective( 15vw )
+    scale(1.1)
+    rotateY( -25deg );
+    transition: all 50ms;
+    filter: drop-shadow(8px 8px 10px rgb(0, 41, 46)) sepia(0%) hue-rotate(0deg);
+  }
 
-    form#select-menu div.light-on input {
-      background-color: #1d1d1d;
-      box-shadow: 0 1px #050505,
-                0 2px #050505,
-                0 3px #050505,
-                0 4px #050505,
-                0 5px #050505,
-                0 6px #050505,
-                0 7px #050505,
-                0 8px #050505,
-                0px 8px 0 5px #81bcff;     
-      transition: all 150ms;
-    }
+  form#select-menu div.light-on input {
+    background-color: #1d1d1d;
+    box-shadow: 0 1px #050505,
+              0 2px #050505,
+              0 3px #050505,
+              0 4px #050505,
+              0 5px #050505,
+              0 6px #050505,
+              0 7px #050505,
+              0 8px #050505,
+              0px 8px 0 5px #81bcff;     
+    transition: all 150ms;
+  }
 
 
 /*Header*/
@@ -549,6 +555,7 @@
     padding: 1%;
     margin: 3% 7% 0px 0px;
     animation: 4s infinite linear button-off-animation;
+    cursor: pointer;
   }
 
   #home-button::after{
